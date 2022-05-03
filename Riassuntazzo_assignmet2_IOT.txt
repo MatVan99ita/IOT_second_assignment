@@ -1,0 +1,98 @@
+################################################ COMPONENTI #############################################################################
+3 bottoni: UP, DOWN (<- selezione delle opzioni), MAKE(<- per avviare)
+Potenziometro (per lo zucchero)
+Display I(^2)C (per simulare lo schermo della macchinetta)
+
+• Componenti aggiuntivi •
+Pir (sensore di movimento) 	-> per vedere se c'è qualcuno in attesa
+Sonar  						-> usato assieme al pir per individuare le persone
+Servo motore 				-> simulare il make della bevanda 
+Coso tenperatura analogico	-> per la temperatura della macchina che deve rimanere nel range
+
+#########################################################################################################################################
+
+
+
+################################################ FUNZIONAMENTO TEORICO ##################################################################
+
+Ci sono 3 bevande: Caffè, te e cioccolata che possono essere fatti fino a N volte prima di dover essere refillata
+
+Va in sleep dopo T(io consiglierei dai 5 ai 10 secondi) tempo che non sta facendo nulla
+
+A livello applicativo(cioè java), bisogna monitorare lo stato della macchina e per refillarla quando vuota
+
+##########################################################################################################################################
+
+
+
+################################################ DETTAGLI ################################################################################
+
+Quando la macchina si avvia(prima volta o dopo un wait) c'è un messaggio di benvenuto per T secondi(qui da 3 a 5 dovrebbe andare bene)
+e dopo di questo C'è un messaggio di ready con la scelta delle 3 bevande(direi di fare un messaggio tipo "Ready \n" -> poi dove cambia 
+semplicemente nome della bevanda in base ad uno switch su un numero che varia da 1 a 3 per le 3 bevande dove cambia il nome)
+
+Le bevande ovviamente posso essere fatte solo N volte e poi va refillata la macchina
+
+Una volta fatto vedere il nome della bevanda scelta per 5 secondi se non viene premuto niente e va fatto tornare il messaggio di Ready
+
+Durante il make il messaggio deve essere "Making of a (tea/coffee/chocolate)..." e il servo motore ruota tra 0 e 180 per T secondi
+(180 è l'angolo in cui finisce il make). Una volta finito ci sarà il messaggio "The tea/chocolate/coffee is ready" sempre sul display
+
+Il prodotto è selezionabile solo se la quantità è > di 0, se finiscono tutti la macchina va in stato di assistenza e sul display ci sarà
+il maessaggio di "Assistance required" e può essere riavviata solo dall'applicativo che la riempirà
+
+Per la rimozione del bicchiere bisogna che il sensore di movimento rilevi una distanza dall'utente > 40cm altrimenti la macchina rimane 
+in attesa della rimozione
+
+Se non vi l'allontamento dell'untente entro T tempo, la macchina ritorna in Ready altrimenti lo fa anche prima, per ritornare in Ready
+va rimpostato il servo a 0 il più velocemente possibile
+
+La modalità sleep dovrebbe teoricamnete spegnere lo schermo e farlo riaccendere quando avverte movimento il sensore
+
+Ogni T tempo(qui lo facciamo molto lungo almeno sopra al minuto) la macchina si controlla facendo ruotare il sevo motore avanti e indietro
+e controllando la temperatura con il sensore che deve essere in un range specifico Tmin e Tmax, se non è nel range va in mod Assistenza
+e per riavviarla serve usare l'applicativo java
+
+
+LA GUI DELL'APPLICATIVO DEVE MOSTRARE
+Zona informativa
+	Stato della macchina: Idle, Lavoro o Assistenza
+	Il numero di bevande ancora disponibili
+	Il numero di self test fatti dall'accensione
+
+Un bottone per il Refill
+Un bottone per il Recover della machina(per quando la temperatira non è apposto o il servo motore non va)
+
+##########################################################################################################################################
+
+
+################################################ VALORI SUGGERITI PER I TEMPI ############################################################
+
+Tmake 	= 10  sec
+Ttimeout 	= 5   sec
+Tidle		= 60  sec
+Tcehck	= 180 sec
+
+TEMPmin	= 17° C
+TEMPmax	= 24° C
+
+##########################################################################################################################################
+
+
+################################################ STATI ###################################################################################
+
+                        60s        5s                    10s                       
+• -> Avvio -> READY <-> WAIT -> TIMEOUT -> Control   -> MAKING -> FINISHED
+               ▲ ↑       ↓↑                (quantità)                |
+	         | |\     PAUSE                 |                       |
+	         | | \                          |                       |
+	     	   | |  \_________________________|______________________↙
+       	   | \                            |
+		   |  \                           ▼
+               ▼   \__________________-> ASSISTANCE
+              CHECK(temp) ->_________________↗
+               180s                                            
+
+##########################################################################################################################################
+
+

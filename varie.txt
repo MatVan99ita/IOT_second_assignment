@@ -1,0 +1,7 @@
+Installing PlatformIO IDE...
+It may take a few minutes depending on your connection speed
+Please do not close this window and do not open other folders until this process is completed.
+
+Debugging information is available via VSCode > Help > Toggle Developer Tools > Console
+
+https://www.site.uottawa.ca/~bochmann/SEG-2106-2506/Notes/M1-2-StateMachines/example-coffeeMachine/index.html
