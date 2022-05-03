@@ -19,7 +19,7 @@ Ci sono 3 bevande: Caffè, te e cioccolata che possono essere fatti fino a N vol
 
 Va in sleep dopo T(io consiglierei dai 5 ai 10 secondi) tempo che non sta facendo nulla
 
-A livello applicativo(cioè java), bisogna monitorare lo stato della macchina e per refillarla quando vuota
+A livello applicativo(cioè java), bisogna monitorare lo stato della macchina per refillarla quando vuota o "ripararla" quando guasta
 
 ##########################################################################################################################################
 
