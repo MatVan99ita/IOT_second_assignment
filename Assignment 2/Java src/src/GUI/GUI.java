@@ -2,6 +2,11 @@ package GUI;
 
 
 import javax.swing.*;
+
+import SerialCommunicator.Logics;
+import SerialCommunicator.Logics;
+import SerialCommunicator.LogicsImpl;
+
 import java.util.*;
 import java.util.List;
 import java.awt.*;
@@ -28,52 +33,65 @@ public class GUI extends JFrame {
     private int counter = 0;
     private Logics logics;
     */
-    public GUI() {
-    	/*
-    	this.logics = new LogicsImpl(size);
-        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-        this.setSize(50*size, 50*size);
+    
+    private final List<JLabel> labels;
+    private List<String> beverageList = Arrays.asList("Chocolate", "Cafe", "Tea");
+    
+    private Logics logics;
+    
+    public GUI(final int size) {
+    	this.logics = new LogicsImpl();
         
-        JPanel panel = new JPanel(new GridLayout(size,size));
-        this.getContentPane().add(panel);
-        
-        ActionListener al = e -> {
-        	JButton jb = (JButton) e.getSource();
-        	this.logics.click();
-        	this.updateView();
-        	this.counter++;
-        	if(logics.isOver()) {
-        		this.disableAll();
-        	}
-        };
-                
-        for (int i=0; i<size; i++){
-            for (int j=0; j<size; j++){
-            	var pos = new Pair<>(j,i);
-                final JButton jb = new JButton(" ");
-                this.cells.put(pos, jb);
-                jb.addActionListener(al);
-                panel.add(jb);
-            }
-        }
-        this.setVisible(true);
-        this.updateView();*/
+    	this.logics = new LogicsImpl();
+    	this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+    	this.setSize(50*size, 50*size);
+    	
+    	JPanel panel = new JPanel(new GridLayout(size, size));
+    	this.getContentPane().add(panel);
+    	
+    	JLabel state_content = new JLabel("Stato attuale: " + this.logics.getStatus());
+    	JLabel chocoloate_info = new JLabel("Cioccolata: " + this.logics.getSpecifiedBeverageCount(this.beverageList.get(0)));
+    	JLabel cafe_info = new JLabel("Caffè: " + this.logics.getSpecifiedBeverageCount(this.beverageList.get(1)));
+    	JLabel tea_info = new JLabel("Tè: " + this.logics.getSpecifiedBeverageCount(this.beverageList.get(2)));
+    	JLabel self_test_info = new JLabel("Test fatti: " + this.logics.getSelfTestCount());
+    	JButton refillButton = new JButton("Refill");
+    	JButton repairButton = new JButton("Repair");
+    	
+    	ActionListener refill = e -> {
+    		this.logics.resetBeverageCount();
+    		this.updateView();
+    	};
+		this.labels = Arrays.asList(chocoloate_info, cafe_info, tea_info);
+    	
+    	ActionListener repair = e -> {
+    		state_content.setText("Riparazione...");
+    		int quantity = this.logics.getSpecifiedBeverageCount(this.beverageList.get(0));
+    		quantity+=-1;
+    		this.logics.makeBevarage("Chocolate", quantity);
+    		this.updateView();
+    	};
+    	
+    	refillButton.addActionListener(refill);
+    	repairButton.addActionListener(repair);
+    	
+    	panel.add(state_content);
+    	panel.add(chocoloate_info);
+    	panel.add(cafe_info);
+    	panel.add(tea_info);
+    	panel.add(self_test_info);
+    	panel.add(refillButton);
+    	panel.add(repairButton);
+    	
+    	this.setVisible(true);
+    	this.updateView();
     }
-
-    /*
-	private void disableAll() {
-		// TODO Auto-generated method stub
-		cells.forEach((p, b) -> {
-			b.setEnabled(false);
-		});
-	}
-
-	private void updateView() {
-		// TODO Auto-generated method stub
-		if (this.cells.containsKey(this.logics.getLastCreated())) {
-			this.cells.get(this.logics.getLastCreated()).setText("" + counter);
-		}
-	}
-    */
+    /**
+     * Updating the view with the arduino info
+     */
+    private void updateView() {
+    	labels.get(0).setText("Cioccolata: " + this.logics.getSpecifiedBeverageCount(this.beverageList.get(0)));
+    	labels.get(1).setText("Caffè: " + this.logics.getSpecifiedBeverageCount(this.beverageList.get(1)));
+    	labels.get(2).setText("Tè: " + this.logics.getSpecifiedBeverageCount(this.beverageList.get(2)));
+    }
 }
 

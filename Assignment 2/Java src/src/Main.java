@@ -1,4 +1,7 @@
 
+import java.awt.Dimension;
+import java.awt.Toolkit;
+
 import GUI.GUI;
 import SerialCommunicator.*;
 
@@ -31,30 +34,11 @@ import SerialCommunicator.*;
  */
 public class Main {
 	public static void main(String[] args) throws Exception {
-        new GUI();
-        
-        if(args.length == 0) {
-        	args = {"12", "12", "12"};
-        }
-        
-        SerialCommChannel channel = new SerialCommChannel(args[0],9600);
-		/* attesa necessaria per fare in modo che Arduino completi il reboot */
-		System.out.println("Waiting Arduino for rebooting...");		
-		Thread.sleep(4000);
-		System.out.println("Ready.");
 
-		
-		while (true){
-			channel.sendMsg("1");
-			String msg = channel.receiveMsg();
-			System.out.println(msg);		
-			Thread.sleep(500);
-		
-			channel.sendMsg("0");
-			msg = channel.receiveMsg();
-			System.out.println(msg);
-			Thread.sleep(500);
-
-		}
+    	
+        new GUI(10);
+        
+        //Logics logics = new LogicsImpl();
+        //logics.Blink();
     }
 }
