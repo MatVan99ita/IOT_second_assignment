@@ -1,4 +1,5 @@
 #include <Servo.h>
+#include <LiquidCrystal.h>
 #include <avr/sleep.h>
 #include <avr/power.h>
 #include <EnableInterrupt.h>
@@ -7,9 +8,16 @@
 Servo myservo;
 int zucchero;
 long int sleepTimer;
+int funzionamento = 0;
+
 
 void Avvio(){
-  Serial.println("Qui scrivo il messaggio di avvio (va messo su display)");
+  
+  //lcd.begin(16, 2);
+lcd.print("Benvenuto, seleziona la tua bevanda");
+delay(5000);
+lcd.clear();
+
   }
 
 void Zucchero(){
@@ -29,6 +37,7 @@ void setup() {
 Serial.begin(9600);
 sleepTimer = 10000000;
 Timer1.initialize();
+Avvio();
 }
 
 void loop() {
