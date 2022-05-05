@@ -10,7 +10,8 @@ public interface Logics {
 	 * @throws Exception
 	 */
 	void Blink() throws Exception;
-
+	
+	void servoRotate() throws Exception;
 
 	public int getSelfTestCount();
 
