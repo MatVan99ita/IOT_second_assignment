@@ -6,16 +6,17 @@ ServoMotor* pMotor;
 
 void setup() {
   Serial.begin(9600);
-  pMotor = new ServoMotorImpl(5);
+  pMotor = new ServoMotorImpl(10);
   pos = 0;
   delta = 1;
+  pMotor->setPosition(0);
 }
 
 void loop() {
   pMotor->on();
   for (int i = 0; i < 180; i++) {
     Serial.println(pos);
-    pMotor->setPosition(pos);         
+    pMotor->setPosition(pos);
     // delay(15);            
     pos += delta;
   }
