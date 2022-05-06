@@ -28,16 +28,16 @@ int servo_delta = 1;
 
 int zucchero;
 long int sleepTimer;
-int funzionamento = 0;
+int funzionamento = 1;
 
 
 void Avvio(){
-  
+lcd.setCursor(2, 1); // Set the cursor on the third column and first row.  
   //lcd.begin(16, 2);
 lcd.print("Benvenuto, seleziona la tua bevanda");
 delay(5000);
 lcd.clear();
-
+lcd.setCursor(2, 1); // Set the cursor on the third column and first row.
   }
 
 void Zucchero(){
@@ -46,13 +46,14 @@ void Zucchero(){
   }
 
 void Creazione(){
-  lcd.setCursor(2, 1); // Set the cursor on the third column and first row.
+  
   pMotor->on();
-  for (int i = 0; i < 180; i++) {
+  for (int i = 0; i < 181; i++) {
     Serial.println(servo_pos);
-    lcd.print(servo_pos);
     pMotor->setPosition(servo_pos);         
     // delay(15);
+    lcd.print(String("Rotazione: ") + servo_pos);
+    lcd.setCursor(2, 1);
     servo_pos += servo_delta;
   }
   pMotor->off();
@@ -81,7 +82,6 @@ Avvio();
 
 void loop() {
   // put your main code here, to run repeatedly:
-  int funzionamento = 1;
   switch(funzionamento){
     case 0://sleep
       set_sleep_mode(SLEEP_MODE_PWR_DOWN);
