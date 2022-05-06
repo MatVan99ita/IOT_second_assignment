@@ -46,9 +46,11 @@ void Zucchero(){
   }
 
 void Creazione(){
+  lcd.setCursor(2, 1); // Set the cursor on the third column and first row.
   pMotor->on();
   for (int i = 0; i < 180; i++) {
     Serial.println(servo_pos);
+    lcd.print(servo_pos);
     pMotor->setPosition(servo_pos);         
     // delay(15);
     servo_pos += servo_delta;
@@ -66,12 +68,14 @@ void Creazione(){
 
 void setup() {
   // put your setup code here, to run once:
-Serial.begin(9600);
+  Serial.begin(9600);
   pMotor = new ServoMotorImpl(servo_pin);
   servo_pos = 0;
   servo_delta = 1;
-sleepTimer = 10000000;
-Timer1.initialize();
+  lcd.init();
+  lcd.backlight();
+  sleepTimer = 10000000;
+  Timer1.initialize();
 Avvio();
 }
 
