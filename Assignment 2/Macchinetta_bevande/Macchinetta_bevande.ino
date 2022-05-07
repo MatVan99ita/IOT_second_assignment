@@ -28,8 +28,10 @@ int servo_delta = 1;
 
 int zucchero;
 long int sleepTimer;
-int funzionamento = 1;
-
+int funzionamento = 0;
+BevandaImpl* Chocolate;
+BevandaImpl* Tea;
+BevandaImpl* Coffee;
 
 void Avvio(){
   lcd.setCursor(2, 1); // Set the cursor on the third column and first row.  
@@ -72,11 +74,17 @@ void RitiroBevanda(){
 }
 
 void Assistenza(){
-
+  set_sleep_mode(SLEEP_MODE_PWR_DOWN);
+  sleep_enable();
+  sleep_mode();
 }
 
 void setup() {
   // put your setup code here, to run once:
+
+  Chocolate = new BevandaImpl();
+  Tea = new BevandaImpl();
+  Coffee = new BevandaImpl();
   Serial.begin(9600);
   pMotor = new ServoMotorImpl(servo_pin);
   servo_pos = 0;
@@ -92,13 +100,9 @@ void loop() {
   // put your main code here, to run repeatedly:
   switch(funzionamento){
     case 0://sleep
-      set_sleep_mode(SLEEP_MODE_PWR_DOWN);
-      sleep_enable();
-      sleep_mode();
+      Assistenza();
       break;
     case 1:
-
-      Assistenza();
       break;
   };
 }
