@@ -19,6 +19,11 @@
 
 #include "bevandaImpl.h"
 
+
+const int buttonUp = //numeroPin;
+const int buttonDown = //numeroPin;
+int buttonUpState=0;
+int buttonDownState=0;
 int servo_pin = 10;
 ServoMotor* pMotor;
 LiquidCrystal_I2C lcd = LiquidCrystal_I2C(0x27,20,4); 
@@ -31,7 +36,7 @@ Ultrasonic ultrasonic(/*da aggiungere i pin*/); //(trig, echo)
 
 int zucchero;
 long int sleepTimer;
-int funzionamento = 0;
+volatile int funzionamento;
 BevandaImpl* Chocolate;
 BevandaImpl* Tea;
 BevandaImpl* Coffee;
@@ -61,6 +66,32 @@ void SelezioneBevanda()
       }
 
     //abilita bottoni
+
+    buttonUpState = digitalRead(buttonUp);
+    buttonDownState = digitalRead(buttonDown);
+
+    if (buttonUpState == HIGH) {
+      if(i=3)
+      {
+        i=1;
+      }
+      else
+      {
+      i++;
+      }
+    }
+    if (buttonDownState == HIGH) {
+      if(i=1)
+      {
+        i=3;
+      }
+      else
+      {
+        i--;
+      }
+
+      
+      }
     
     if(i==1)
     {
@@ -73,7 +104,7 @@ void SelezioneBevanda()
     else if(i==3)
     {
       serial.println("Caffè");
-      }
+    }
 
 
 //quando viene premuto make
@@ -130,6 +161,7 @@ void Assistenza(){
 void setup() {
   // put your setup code here, to run once:
 
+  funzionamento=1;
   Chocolate = new BevandaImpl();
   Tea = new BevandaImpl();
   Coffee = new BevandaImpl();
