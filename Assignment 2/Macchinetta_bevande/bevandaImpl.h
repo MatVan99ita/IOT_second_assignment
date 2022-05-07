@@ -12,9 +12,7 @@ public:
   void refillBeverage();
 
 private:
-  int chocolate;
-  int tea;
-  int coffee;
+  int beverage;
 };
 
 #endif
