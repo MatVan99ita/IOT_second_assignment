@@ -54,10 +54,10 @@ public class GUI extends JFrame {
     	//Creating navigable info panel
     	defaultListModel = new DefaultListModel< >();
     	defaultListModel.addElement("INFO VARIE:");
-    	defaultListModel.addElement("Cioccolata: " + this.logics.getSpecifiedBeverageCount(this.beverageList.get(0)));
-    	defaultListModel.addElement("Caffè: " + this.logics.getSpecifiedBeverageCount(this.beverageList.get(1)));
-    	defaultListModel.addElement("Tè: " + this.logics.getSpecifiedBeverageCount(this.beverageList.get(2)));
-    	defaultListModel.addElement("Test fatti: " + this.logics.getSelfTestCount());
+    	defaultListModel.addElement("");
+    	defaultListModel.addElement("");
+    	defaultListModel.addElement("");
+    	defaultListModel.addElement("");
         JList<String> jList = new JList< >(defaultListModel);
         jList.setBounds(100,100,75,75);
         this.add(jList);
@@ -108,7 +108,6 @@ public class GUI extends JFrame {
     	defaultListModel.set(2, "Caffè: " + this.logics.getSpecifiedBeverageCount(this.beverageList.get(1)));
     	defaultListModel.set(3, "Tè: " + this.logics.getSpecifiedBeverageCount(this.beverageList.get(2)));defaultListModel.set(3, "Tè: " + this.logics.getSpecifiedBeverageCount(this.beverageList.get(2)));
     	defaultListModel.set(4, "Test fatti: " + this.logics.getSelfTestCount());
-        
     }
 }
 

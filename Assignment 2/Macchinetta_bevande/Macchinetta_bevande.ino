@@ -16,7 +16,7 @@
 #include "lm35_impl.h"
 //#include "ComponentLib/ServoTimer2.h"
 
-
+#include "bevandaImpl.h"
 
 int servo_pin = 10;
 ServoMotor* pMotor;
@@ -32,18 +32,18 @@ int funzionamento = 1;
 
 
 void Avvio(){
-lcd.setCursor(2, 1); // Set the cursor on the third column and first row.  
-  //lcd.begin(16, 2);
-lcd.print("Benvenuto, seleziona la tua bevanda");
-delay(5000);
-lcd.clear();
-lcd.setCursor(2, 1); // Set the cursor on the third column and first row.
-  }
+  lcd.setCursor(2, 1); // Set the cursor on the third column and first row.  
+    //lcd.begin(16, 2);
+  lcd.print("Benvenuto, seleziona la tua bevanda");
+  delay(5000);
+  lcd.clear();
+  lcd.setCursor(2, 1); // Set the cursor on the third column and first row.
+}
 
 void Zucchero(){
   int newValue = analogRead(POT_PIN);
   zucchero = newValue/256 ; //assegno un valore tra 0 e 3
-  }
+}
 
 void Creazione(){
   
@@ -65,7 +65,15 @@ void Creazione(){
   myservo.write(0);
   delay(1500);     //va cambiato rispetto al tempo di creazione
   myservo.write(180);         //ho finito di creare*/
-  }
+}
+
+void RitiroBevanda(){
+
+}
+
+void Assistenza(){
+
+}
 
 void setup() {
   // put your setup code here, to run once:
@@ -77,7 +85,7 @@ void setup() {
   lcd.backlight();
   sleepTimer = 10000000;
   Timer1.initialize();
-Avvio();
+  Avvio();
 }
 
 void loop() {
@@ -89,7 +97,8 @@ void loop() {
       sleep_mode();
       break;
     case 1:
-      Creazione();
+
+      Assistenza();
       break;
   };
 }

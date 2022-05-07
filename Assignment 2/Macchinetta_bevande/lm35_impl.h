@@ -8,7 +8,7 @@ class LM35Impl: public LM35 {
 
 public:
   LM35Impl(int pin);
-  virtual double convertToC(double value);
+  double convertToC(double value);
 
 private:
   int pin;
