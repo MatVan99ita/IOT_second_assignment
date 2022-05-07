@@ -7,6 +7,6 @@ LM35Impl::LM35Impl(int pin){
 
 double LM35Impl::convertToC(double value){
   int value_in_mV = 4.8876 * value; 
-  double value_in_C = value_in_mV * 0.1;
+  double value_in_C = (value_in_mV - 500) * 0.1;
   return value_in_C;
 }
