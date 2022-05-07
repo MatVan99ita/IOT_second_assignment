@@ -1,6 +1,7 @@
 //#include <Servo.h>
 //#include <LiquidCrystal.h>
 #include <LiquidCrystal_I2C.h> 
+#include <Ultrasonic.h>
 #include <avr/sleep.h>
 #include <avr/power.h>
 #include <EnableInterrupt.h>
@@ -26,6 +27,8 @@ int POT_PIN = A1;
 int servo_pos = 0;
 int servo_delta = 1;
 
+Ultrasonic ultrasonic(/*da aggiungere i pin*/); //(trig, echo)
+
 int zucchero;
 long int sleepTimer;
 int funzionamento = 0;
@@ -47,7 +50,45 @@ void Zucchero(){
   zucchero = newValue/256 ; //assegno un valore tra 0 e 3
 }
 
+
+void SelezioneBevanda()
+
+    if(bevanda.beverage && bevanda.beverage && bevanda.beverage == 0)
+    {
+      funzionamento=0;
+      serial.println("assistance required");
+      loop();
+      }
+
+    //abilita bottoni
+    
+    if(i==1)
+    {
+      serial.println("Cioccolato");
+      }
+    else if(i==2)
+    {
+      serial.println("Tea");
+      }
+    else if(i==3)
+    {
+      serial.println("Caffè");
+      }
+
+
+//quando viene premuto make
+if(bevanda.beverage==0)
+{
+  serial.println("bevanda non disponibile");
+  SelezioneBevanda();
+  }
+else{Creazione()}
+}
+
+
 void Creazione(){
+
+  serial.println("Making a ....");
   
   pMotor->on();
   for (int i = 0; i < 181; i++) {
@@ -70,7 +111,14 @@ void Creazione(){
 }
 
 void RitiroBevanda(){
-
+serial.ptintln("ritirare la bevanda");
+if(ultrasonic.distanceRead()>=40)
+{
+  serial.println("bevanda ritirata");
+  pMotor->setPosition(0);
+  }
+else if(ultrasonic.distanceRead()<40 && //timeoutCounter>tempotimeout)
+  pMotor->setPosition(0);
 }
 
 void Assistenza(){
@@ -99,10 +147,13 @@ void setup() {
 void loop() {
   // put your main code here, to run repeatedly:
   switch(funzionamento){
-    case 0://sleep
+    case 0://assistenza
       Assistenza();
       break;
     case 1:
+      SelezioneBevanda()
+      break;
+    case 2://sleep
       break;
   };
 }
