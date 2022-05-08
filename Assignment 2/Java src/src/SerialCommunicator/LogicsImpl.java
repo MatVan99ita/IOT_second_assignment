@@ -3,24 +3,74 @@ package SerialCommunicator;
 import java.util.HashMap;
 import java.util.Map;
 
-public class LogicsImpl implements Logics {
-	
 
-	private int selfTestCount;
+
+public class LogicsImpl implements Logics {
+	private enum Status{
+		REFILL("Refill"), 
+		REPAIR("Repair"), 
+		MAKING("Make"), 
+		WAITING("Wait"),
+		SELF_TEST("SelfTest"),
+		IDLE("Idle");
+		
+		private String value;
+		private Status(String value) {
+			this.value = value;
+		}
+		
+		public String getValue() {
+			return this.value;
+		}
+	}
+
+	private static final int BEVERAGE_AMUOUNT = 100;
+	private enum Beverage{
+		CHOCOLATE(BEVERAGE_AMUOUNT, "Chocolate"), 
+		TEA(BEVERAGE_AMUOUNT, "Tea"),
+		COFFEE(BEVERAGE_AMUOUNT, "Coffee");
+		private int quantity;
+		private String beverage;
+		
+		private Beverage(int quantity, String beverage) {
+			// TODO Auto-generated constructor stub
+			this.quantity = quantity;
+			this.beverage = beverage;
+		}
+		
+		public void MakeBeverage() {
+			this.quantity-=1;
+		}
+		
+		public int getBeverageQuantity() {
+			return this.quantity;
+		}
+		
+		public void refill() {
+			this.quantity = BEVERAGE_AMUOUNT;
+		}
+		
+		public String getBeverageName() {
+			return this.beverage;
+		}
+	}
 	
-	private Map<String, Integer> beverageCount = new HashMap<>(3);
+	private static final String REFILL = "Refill";
+	private static final String REPAIR = "Repair";
+	private int selfTestCount;
+	Beverage beverage;
 	private String status;
-	private static final int beverageQuantity = 100;
+	private String operation;
 	
 	public LogicsImpl() {
-		this.beverageCount = Map.of("Chocolate", beverageQuantity, "Cafe", beverageQuantity, "Tea", beverageQuantity); 
 		resetSelfTestCount();
 		setStatus("Avvio");
 	}
 
 	@Override
-	public void RefillOrRepair(int operation) throws Exception {
+	public void RefillOrRepair(String operation) throws Exception {
 		// TODO Auto-generated method stub
+		this.operation = operation;
 		String msg;
 		SerialCommChannel channel = new SerialCommChannel("COM3", 9600);
 		/* attesa necessaria per fare in modo che Arduino completi il reboot */
@@ -28,15 +78,18 @@ public class LogicsImpl implements Logics {
 		Thread.sleep(4000);
 		System.out.println("Ready.");
 		
+		
 		switch (operation) {
-		case 0:
-			channel.sendMsg("Refill");
+		case REFILL:
+			this.setStatus(REFILL);
+			channel.sendMsg(REFILL);
 			msg = channel.receiveMsg();
 			System.out.println(msg);
 			break;
 			
-		case 1:
-			channel.sendMsg("Repair");
+		case REPAIR:
+			this.setStatus(REPAIR);
+			channel.sendMsg(REPAIR);
 			msg = channel.receiveMsg();
 			System.out.println(msg);
 			break;
@@ -47,7 +100,7 @@ public class LogicsImpl implements Logics {
 			break;
 		}
 	}
-
+	
 	@Override
 	public int getSelfTestCount() {
 		return this.selfTestCount;
@@ -60,7 +113,7 @@ public class LogicsImpl implements Logics {
 
 	@Override
 	public int getSpecifiedBeverageCount(String beverage) {
-		return this.beverageCount.get(beverage).intValue();
+		return Beverage.valueOf(beverage).getBeverageQuantity();
 	}
 
 	@Override
@@ -69,19 +122,15 @@ public class LogicsImpl implements Logics {
 	}
 
 	@Override
-	public void makeBevarage(final String beverage, final int quantity) {
-		Map<String, Integer> tmp = new HashMap<>(this.beverageCount);
-		tmp.merge(beverage, -1, Integer::sum);
-		this.setBeverageMap(tmp);
-	}
-	
-	private void setBeverageMap(Map<String, Integer> map) {
-		this.beverageCount = map;
+	public void makeBevarage(final String beverage) {
+		Beverage.valueOf(beverage).MakeBeverage();
 	}
 
 	@Override
 	public void resetBeverageCount() {
-		this.setBeverageMap(Map.of("Chocolate", beverageQuantity, "Cafe", beverageQuantity, "Tea", beverageQuantity)); 
+		for(Beverage beverage: Beverage.values()) {
+			beverage.refill();
+		}
 	}
 
 	@Override
@@ -103,10 +152,10 @@ public class LogicsImpl implements Logics {
 		System.out.println("Waiting Arduino for rebooting...");		
 		Thread.sleep(4000);
 		System.out.println("Ready.");
-
-				
-		while (true){
-			channel.sendMsg(""+angle);
+		
+		//Rotazione singola per sistemare in caso di problemi
+		for(int i = 0; i < 180; i++) {
+			channel.sendMsg(""+i);
 			String msg = channel.receiveMsg();
 			System.out.println(msg);		
 			Thread.sleep(100);

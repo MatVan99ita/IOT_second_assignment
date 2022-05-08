@@ -38,9 +38,14 @@ public class GUI extends JFrame {
     private List<String> beverageList = Arrays.asList("Chocolate", "Cafe", "Tea");
     private static final int WIDTH = 400;
     private static final int HEIGHT = 300;
+    private static final String CHOCOLATE = "Chocolate";
+    private static final String TEA = "Tea";
+    private static final String COFFEE = "Coffee";
+    
     private DefaultListModel<String> defaultListModel;
     private Logics logics;
-    
+    JButton refillButton;
+    JButton repairButton;
     public GUI(final int size) {
     	this.logics = new LogicsImpl();
         
@@ -65,20 +70,16 @@ public class GUI extends JFrame {
         //Creating assistant bottom menu
     	JPanel assistantPanel = new JPanel(); // the panel is not visible in output
     	JLabel state_content = new JLabel("Stato attuale: " + this.logics.getStatus());
-        JButton refillButton = new JButton("Refill");
-    	JButton repairButton = new JButton("Repair");
-    	refillButton.setEnabled(false);
-    	repairButton.setEnabled(false);
+    	this.refillButton = new JButton("Refill");
+    	this.repairButton = new JButton("Repair");
+    	this.refillButton.setEnabled(false);
+    	this.repairButton.setEnabled(false);
         assistantPanel.add(state_content); // Components Added using Flow Layout
-        assistantPanel.add(refillButton);
-        assistantPanel.add(repairButton);
-        
-        
-        
+        assistantPanel.add(this.refillButton);
+        assistantPanel.add(this.repairButton);
 
         this.getContentPane().add(BorderLayout.SOUTH, assistantPanel);
         //this.getContentPane().add(BorderLayout.NORTH, infoArea);
-    	
     	
     	
     	ActionListener refill = e -> {
@@ -91,7 +92,7 @@ public class GUI extends JFrame {
     		state_content.setText("Riparazione...");
     		int quantity = this.logics.getSpecifiedBeverageCount(this.beverageList.get(0));
     		quantity+=-1;
-    		this.logics.makeBevarage("Chocolate", quantity);
+    		this.logics.makeBevarage(CHOCOLATE);
     		this.updateView();
     	};
     	
@@ -104,10 +105,20 @@ public class GUI extends JFrame {
      * Updating the view with the arduino info
      */
     private void updateView() {
-    	defaultListModel.set(1, "Cioccolata: " + this.logics.getSpecifiedBeverageCount(this.beverageList.get(0)));
-    	defaultListModel.set(2, "Caffè: " + this.logics.getSpecifiedBeverageCount(this.beverageList.get(1)));
-    	defaultListModel.set(3, "Tè: " + this.logics.getSpecifiedBeverageCount(this.beverageList.get(2)));defaultListModel.set(3, "Tè: " + this.logics.getSpecifiedBeverageCount(this.beverageList.get(2)));
+    	defaultListModel.set(1, "Cioccolata: " + this.logics.getSpecifiedBeverageCount(CHOCOLATE));
+    	defaultListModel.set(2, "Caffè: " + this.logics.getSpecifiedBeverageCount(COFFEE));
+    	defaultListModel.set(3, "Tè: " + this.logics.getSpecifiedBeverageCount(TEA));
     	defaultListModel.set(4, "Test fatti: " + this.logics.getSelfTestCount());
+
+    	if(this.logics.getStatus() == "Assistant") {
+    		this.AssistantButtonActivation();
+    	}
+    
+    }
+    
+    private void AssistantButtonActivation() {
+    	this.refillButton.setEnabled(true);
+    	this.repairButton.setEnabled(true);
     }
 }
 

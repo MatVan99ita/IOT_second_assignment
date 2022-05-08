@@ -11,7 +11,7 @@ public interface Logics {
 	 * 1 = Repair
 	 * @throws Exception
 	 */
-	void RefillOrRepair(int operation) throws Exception;
+	void RefillOrRepair(String operation) throws Exception;
 	
 	void servoRotate() throws Exception;
 
@@ -28,7 +28,7 @@ public interface Logics {
 
 	public String getStatus();
 	
-	public void makeBevarage(String beverage, int quantity);
+	public void makeBevarage(String beverage);
 	
 	public void resetBeverageCount();
 	
