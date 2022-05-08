@@ -6,6 +6,8 @@ import java.util.Map;
 
 
 public class LogicsImpl implements Logics {
+	
+	/* NON SONO TROPPO CONVINTO PER QUESTO
 	private enum Status{
 		REFILL("Refill"), 
 		REPAIR("Repair"), 
@@ -22,9 +24,15 @@ public class LogicsImpl implements Logics {
 		public String getValue() {
 			return this.value;
 		}
-	}
+	}*/
 
 	private static final int BEVERAGE_AMUOUNT = 100;
+	
+	/**
+	 * Enum used for machine beverage, 
+	 * a class were too much for only 3 specific beverage 
+	 * with same usage and the difference is only the name
+	 */
 	private enum Beverage{
 		CHOCOLATE(BEVERAGE_AMUOUNT, "Chocolate"), 
 		TEA(BEVERAGE_AMUOUNT, "Tea"),
