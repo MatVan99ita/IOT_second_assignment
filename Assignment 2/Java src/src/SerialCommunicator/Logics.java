@@ -7,9 +7,11 @@ public interface Logics {
 	
 	/**
 	 * Example made for seding led input to serial port communication
+	 * 0 = Refill
+	 * 1 = Repair
 	 * @throws Exception
 	 */
-	void Blink() throws Exception;
+	void RefillOrRepair(int operation) throws Exception;
 	
 	void servoRotate() throws Exception;
 

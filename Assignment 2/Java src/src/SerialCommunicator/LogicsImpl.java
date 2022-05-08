@@ -19,26 +19,32 @@ public class LogicsImpl implements Logics {
 	}
 
 	@Override
-	public void Blink() throws Exception {
+	public void RefillOrRepair(int operation) throws Exception {
 		// TODO Auto-generated method stub
+		String msg;
 		SerialCommChannel channel = new SerialCommChannel("COM3", 9600);
 		/* attesa necessaria per fare in modo che Arduino completi il reboot */
 		System.out.println("Waiting Arduino for rebooting...");		
 		Thread.sleep(4000);
 		System.out.println("Ready.");
-
 		
-		while (true){
-			channel.sendMsg("1");
-			String msg = channel.receiveMsg();
-			System.out.println(msg);		
-			Thread.sleep(500);
-		
-			channel.sendMsg("0");
+		switch (operation) {
+		case 0:
+			channel.sendMsg("Refill");
 			msg = channel.receiveMsg();
 			System.out.println(msg);
-			Thread.sleep(500);
+			break;
+			
+		case 1:
+			channel.sendMsg("Repair");
+			msg = channel.receiveMsg();
+			System.out.println(msg);
+			break;
 
+		default:
+			msg = channel.receiveMsg();
+			System.out.println(msg);
+			break;
 		}
 	}
 
