@@ -20,8 +20,8 @@
 #include "bevandaImpl.h"
 
 
-const int buttonUp = //numeroPin;
-const int buttonDown = //numeroPin;
+const int buttonUp = //numeroPin;                   //////////////////
+const int buttonDown = //numeroPin;                 /////////////////
 int buttonUpState=0;
 int buttonDownState=0;
 int servo_pin = 10;
@@ -29,10 +29,11 @@ ServoMotor* pMotor;
 LiquidCrystal_I2C lcd = LiquidCrystal_I2C(0x27,20,4); 
 int POT_PIN = A1;
 
+
 int servo_pos = 0;
 int servo_delta = 1;
 
-Ultrasonic ultrasonic(/*da aggiungere i pin*/); //(trig, echo)
+Ultrasonic ultrasonic(/*da aggiungere i pin*/); //(trig, echo)      /////////////////
 
 int zucchero;
 long int sleepTimer;
@@ -113,7 +114,9 @@ if(bevanda.beverage==0)
   serial.println("bevanda non disponibile");
   SelezioneBevanda();
   }
-else{Creazione()}
+else{
+  Creazione();
+    }
 }
 
 
@@ -152,15 +155,67 @@ else if(ultrasonic.distanceRead()<40 && //timeoutCounter>tempotimeout)
   pMotor->setPosition(0);
 }
 
-void Assistenza(){
+void Sleep(){
   set_sleep_mode(SLEEP_MODE_PWR_DOWN);
   sleep_enable();
   sleep_mode();
 }
 
+
+void Check(){
+  int temperatura = analogRead(//pinTemperatura);
+  int value_in_mV = 4.8876 * value; 
+  double value_in_C = ( value_in_mV - 500) * 0.1;
+  pMotor->on();
+  for (int i = 0; i < 180; i++) {
+    Serial.println(pos);
+    pMotor->setPosition(pos);
+    // delay(15);            
+    pos += servo_delta;
+  }
+  if(value_in_C < 17 || value_in_C > 24)
+  {
+    pMotor->setPosition(0);
+    pMotor->off();
+    lcd.print("Assistance Required");
+    Assistenza();
+  }
+  pMotor->on();
+  for (int i = 180; i >= 1; i++)
+  {
+    pMotor->setPosition(pos);
+    pos += servo_delta;
+    }
+   pMotor->off();
+  
+  if(value_in_C < 17 || value_in_C > 24)
+  {
+    lcd.print("Assistance Required");
+    Assistenza();
+  }
+}
+
+
+
 void setup() {
   // put your setup code here, to run once:
 
+  pinMode(//PIR_PIN,INPUT);
+  Serial.print("Calibrating sensor... ");
+  for(int i = 0; i < CALIBRATION_TIME_SEC; i++){
+  int detectedStatus = false;
+  
+ /* int current = digitalRead(PIR_PIN);
+  if (current != detectedStatus ){
+    detectedStatus = current;
+    if (current) {
+      Serial.println("detected!");  
+    } else {
+      Serial.println("no more detected.");
+    }
+  }
+*/
+    
   funzionamento=1;
   Chocolate = new BevandaImpl();
   Tea = new BevandaImpl();
@@ -186,6 +241,12 @@ void loop() {
       SelezioneBevanda()
       break;
     case 2://sleep
+      
+      if(detectedStatus == false && /* timer ha concluso*/
+      {
+        sleep();
+      }
+    
       break;
   };
 }
