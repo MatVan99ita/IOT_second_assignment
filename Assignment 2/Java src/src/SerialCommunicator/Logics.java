@@ -2,16 +2,12 @@ package SerialCommunicator;
 
 
 public interface Logics {
-	
-
-	
 	/**
-	 * Example made for seding led input to serial port communication
-	 * 0 = Refill
-	 * 1 = Repair
+	 * Funzione per l'invio della richiesta di assitenza
+	 * @param status
 	 * @throws Exception
 	 */
-	void RefillOrRepair(String operation) throws Exception;
+	void SendChange(String status) throws Exception;
 	
 	void servoRotate() throws Exception;
 

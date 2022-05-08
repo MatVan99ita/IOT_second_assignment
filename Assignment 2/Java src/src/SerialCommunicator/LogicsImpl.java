@@ -1,112 +1,39 @@
 package SerialCommunicator;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
 
 public class LogicsImpl implements Logics {
-	
-	/* NON SONO TROPPO CONVINTO PER QUESTO
-	private enum Status{
-		REFILL("Refill"), 
-		REPAIR("Repair"), 
-		MAKING("Make"), 
-		WAITING("Wait"),
-		SELF_TEST("SelfTest"),
-		IDLE("Idle");
-		
-		private String value;
-		private Status(String value) {
-			this.value = value;
-		}
-		
-		public String getValue() {
-			return this.value;
-		}
-	}*/
 
-	private static final int BEVERAGE_AMUOUNT = 100;
-	
-	/**
-	 * Enum used for machine beverage, 
-	 * a class were too much for only 3 specific beverage 
-	 * with same usage and the difference is only the name
-	 */
-	private enum Beverage{
-		CHOCOLATE(BEVERAGE_AMUOUNT, "Chocolate"), 
-		TEA(BEVERAGE_AMUOUNT, "Tea"),
-		COFFEE(BEVERAGE_AMUOUNT, "Coffee");
-		private int quantity;
-		private String beverage;
-		
-		private Beverage(int quantity, String beverage) {
-			// TODO Auto-generated constructor stub
-			this.quantity = quantity;
-			this.beverage = beverage;
-		}
-		
-		public void MakeBeverage() {
-			this.quantity-=1;
-		}
-		
-		public int getBeverageQuantity() {
-			return this.quantity;
-		}
-		
-		public void refill() {
-			this.quantity = BEVERAGE_AMUOUNT;
-		}
-		
-		public String getBeverageName() {
-			return this.beverage;
-		}
-	}
-	
 	private static final String REFILL = "Refill";
 	private static final String REPAIR = "Repair";
 	private int selfTestCount;
-	Beverage beverage;
 	private String status;
 	private String operation;
+	private Map<String, BeverageImpl> beverages;
+	
 	
 	public LogicsImpl() {
+		this.beverages = Map.of(
+				"Chocolate", new BeverageImpl("Chocolate"),
+				"Tea", new BeverageImpl("Tea"),
+				"Coffee", new BeverageImpl("Coffee"));
 		resetSelfTestCount();
 		setStatus("Avvio");
 	}
-
+	
 	@Override
-	public void RefillOrRepair(String operation) throws Exception {
-		// TODO Auto-generated method stub
-		this.operation = operation;
-		String msg;
+	public void SendChange(String status) throws Exception {
 		SerialCommChannel channel = new SerialCommChannel("COM3", 9600);
-		/* attesa necessaria per fare in modo che Arduino completi il reboot */
 		System.out.println("Waiting Arduino for rebooting...");		
 		Thread.sleep(4000);
 		System.out.println("Ready.");
-		
-		
-		switch (operation) {
-		case REFILL:
-			this.setStatus(REFILL);
-			channel.sendMsg(REFILL);
-			msg = channel.receiveMsg();
-			System.out.println(msg);
-			break;
-			
-		case REPAIR:
-			this.setStatus(REPAIR);
-			channel.sendMsg(REPAIR);
-			msg = channel.receiveMsg();
-			System.out.println(msg);
-			break;
-
-		default:
-			msg = channel.receiveMsg();
-			System.out.println(msg);
-			break;
-		}
+		channel.sendMsg(REFILL);
 	}
 	
 	@Override
@@ -121,7 +48,7 @@ public class LogicsImpl implements Logics {
 
 	@Override
 	public int getSpecifiedBeverageCount(String beverage) {
-		return Beverage.valueOf(beverage).getBeverageQuantity();
+		return this.beverages.get(beverage).getQuantity();
 	}
 
 	@Override
@@ -131,14 +58,12 @@ public class LogicsImpl implements Logics {
 
 	@Override
 	public void makeBevarage(final String beverage) {
-		Beverage.valueOf(beverage).MakeBeverage();
+		this.beverages.get(beverage).makeBeverage();
 	}
 
 	@Override
 	public void resetBeverageCount() {
-		for(Beverage beverage: Beverage.values()) {
-			beverage.refill();
-		}
+		this.beverages.forEach((s, bev) -> bev.refill());
 	}
 
 	@Override

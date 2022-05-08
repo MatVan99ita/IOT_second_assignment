@@ -35,7 +35,6 @@ public class GUI extends JFrame {
     */
     
     //private final List<JLabel> labels;
-    private List<String> beverageList = Arrays.asList("Chocolate", "Cafe", "Tea");
     private static final int WIDTH = 400;
     private static final int HEIGHT = 300;
     private static final String CHOCOLATE = "Chocolate";
@@ -72,8 +71,8 @@ public class GUI extends JFrame {
     	JLabel state_content = new JLabel("Stato attuale: " + this.logics.getStatus());
     	this.refillButton = new JButton("Refill");
     	this.repairButton = new JButton("Repair");
-    	this.refillButton.setEnabled(false);
-    	this.repairButton.setEnabled(false);
+    	//this.refillButton.setEnabled(false);
+    	//this.repairButton.setEnabled(false);
         assistantPanel.add(state_content); // Components Added using Flow Layout
         assistantPanel.add(this.refillButton);
         assistantPanel.add(this.repairButton);
@@ -90,7 +89,7 @@ public class GUI extends JFrame {
     	
     	ActionListener repair = e -> {
     		state_content.setText("Riparazione...");
-    		int quantity = this.logics.getSpecifiedBeverageCount(this.beverageList.get(0));
+    		int quantity = this.logics.getSpecifiedBeverageCount(this.CHOCOLATE);
     		quantity+=-1;
     		this.logics.makeBevarage(CHOCOLATE);
     		this.updateView();
@@ -105,9 +104,9 @@ public class GUI extends JFrame {
      * Updating the view with the arduino info
      */
     private void updateView() {
-    	defaultListModel.set(1, "Cioccolata: " + this.logics.getSpecifiedBeverageCount(CHOCOLATE));
-    	defaultListModel.set(2, "Caffè: " + this.logics.getSpecifiedBeverageCount(COFFEE));
-    	defaultListModel.set(3, "Tè: " + this.logics.getSpecifiedBeverageCount(TEA));
+    	defaultListModel.set(1, "Cioccolata: " + this.logics.getSpecifiedBeverageCount(GUI.CHOCOLATE));
+    	defaultListModel.set(2, "Caffè: " + this.logics.getSpecifiedBeverageCount(GUI.COFFEE));
+    	defaultListModel.set(3, "Tè: " + this.logics.getSpecifiedBeverageCount(GUI.TEA));
     	defaultListModel.set(4, "Test fatti: " + this.logics.getSelfTestCount());
 
     	if(this.logics.getStatus() == "Assistant") {
