@@ -18,7 +18,7 @@ void loop() {
 
   /* value_in_C = value_in_mV / 10 (since we have 10 mV => 1 °C ) */
 
-  double value_in_C = value_in_mV * 0.1;
+  double value_in_C = ( value_in_mV - 500) * 0.1;
   
   Serial.println(value_in_C);
 
