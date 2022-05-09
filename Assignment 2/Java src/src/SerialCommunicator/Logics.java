@@ -20,7 +20,7 @@ public interface Logics {
 	 * 1: Caffè <br>
 	 * 2: Tè <br>
 	 */
-	public int getSpecifiedBeverageCount(String beverage);
+	public int getSpecifiedBeverageCount(String beverage) throws Exception ;
 
 	public String getStatus();
 	

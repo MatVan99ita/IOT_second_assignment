@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+import SerialCommunicator.SerialCommChannel;
 
 
 public class LogicsImpl implements Logics {
@@ -16,9 +16,11 @@ public class LogicsImpl implements Logics {
 	private String status;
 	private String operation;
 	private Map<String, BeverageImpl> beverages;
+	SerialCommChannel channel;
 	
+	public LogicsImpl(String[] args) throws Exception {
+		channel = new SerialCommChannel(args[0], 9600);
 	
-	public LogicsImpl() {
 		this.beverages = Map.of(
 				"Chocolate", new BeverageImpl("Chocolate"),
 				"Tea", new BeverageImpl("Tea"),
@@ -47,7 +49,17 @@ public class LogicsImpl implements Logics {
 	}
 
 	@Override
-	public int getSpecifiedBeverageCount(String beverage) {
+	public int getSpecifiedBeverageCount(String beverage){
+		try {
+			Thread.sleep(4000);
+			channel.sendMsg(beverage);
+			String msg = channel.receiveMsg();
+			System.out.println("Received: "+msg);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		return this.beverages.get(beverage).getQuantity();
 	}
 
@@ -80,7 +92,6 @@ public class LogicsImpl implements Logics {
 	public void servoRotate() throws Exception {
 		// TODO Auto-generated method stub
 		int angle = 0;
-		SerialCommChannel channel = new SerialCommChannel("COM3", 9600);
 		/* attesa necessaria per fare in modo che Arduino completi il reboot */
 		System.out.println("Waiting Arduino for rebooting...");		
 		Thread.sleep(4000);

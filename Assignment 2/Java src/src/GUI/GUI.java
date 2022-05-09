@@ -4,8 +4,8 @@ package GUI;
 import javax.swing.*;
 
 import SerialCommunicator.Logics;
-import SerialCommunicator.Logics;
 import SerialCommunicator.LogicsImpl;
+import SerialCommunicator.SerialCommChannel;
 
 import java.util.*;
 import java.util.List;
@@ -45,10 +45,18 @@ public class GUI extends JFrame {
     private Logics logics;
     JButton refillButton;
     JButton repairButton;
-    public GUI(final int size) {
-    	this.logics = new LogicsImpl();
-        
-    	this.logics = new LogicsImpl();
+    JLabel state_content;
+    SerialCommChannel channel;
+    
+    
+    
+    public GUI(final int size, final String[] args){
+    	try {
+			this.logics = new LogicsImpl(args);
+		} catch (Exception e3) {
+			// TODO Auto-generated catch block
+			e3.printStackTrace();
+		}
     	this.setDefaultCloseOperation(EXIT_ON_CLOSE);
     	this.setSize(WIDTH, HEIGHT);
     	
@@ -68,7 +76,7 @@ public class GUI extends JFrame {
     	
         //Creating assistant bottom menu
     	JPanel assistantPanel = new JPanel(); // the panel is not visible in output
-    	JLabel state_content = new JLabel("Stato attuale: " + this.logics.getStatus());
+    	this.state_content = new JLabel("");
     	this.refillButton = new JButton("Refill");
     	this.repairButton = new JButton("Repair");
     	//this.refillButton.setEnabled(false);
@@ -83,27 +91,50 @@ public class GUI extends JFrame {
     	
     	ActionListener refill = e -> {
     		this.logics.resetBeverageCount();
-    		this.updateView();
+    		try {
+				this.updateView();
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
     	};
 		//this.labels = Arrays.asList(chocoloate_info, cafe_info, tea_info);
     	
     	ActionListener repair = e -> {
     		state_content.setText("Riparazione...");
-    		int quantity = this.logics.getSpecifiedBeverageCount(this.CHOCOLATE);
-    		quantity+=-1;
+    		int quantity;
+			try {
+				quantity = this.logics.getSpecifiedBeverageCount(this.CHOCOLATE);
+				quantity+=-1;
+			} catch (Exception e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			}
     		this.logics.makeBevarage(CHOCOLATE);
-    		this.updateView();
+    		try {
+				this.updateView();
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
     	};
     	
     	refillButton.addActionListener(refill);
     	repairButton.addActionListener(repair);
     	this.setVisible(true);
-    	this.updateView();
+    	try {
+			this.updateView();
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
     }
     /**
      * Updating the view with the arduino info
+     * @throws Exception 
      */
-    private void updateView() {
+    private void updateView() throws Exception {
+    	this.state_content.setText("Stato attuale: " + this.logics.getStatus());
     	defaultListModel.set(1, "Cioccolata: " + this.logics.getSpecifiedBeverageCount(GUI.CHOCOLATE));
     	defaultListModel.set(2, "Caffè: " + this.logics.getSpecifiedBeverageCount(GUI.COFFEE));
     	defaultListModel.set(3, "Tè: " + this.logics.getSpecifiedBeverageCount(GUI.TEA));

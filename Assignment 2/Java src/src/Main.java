@@ -1,9 +1,4 @@
-
-import java.awt.Dimension;
-import java.awt.Toolkit;
-
 import GUI.GUI;
-import SerialCommunicator.*;
 
 
 /**
@@ -33,10 +28,10 @@ import SerialCommunicator.*;
 
  */
 public class Main {
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) {
 
     	
-        new GUI(10);
+        new GUI(10, args);
         
         //Logics logics = new LogicsImpl();
         //logics.Blink();
