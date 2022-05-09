@@ -6,6 +6,9 @@
 #include <avr/power.h>
 #include <EnableInterrupt.h>
 #include "TimerOne.h"
+#include "ServoTImer2.h"
+
+// TODO       AGGIUNGERE millis() per i vari timer
 
 /*Librerie con strumenti di utilità*/
 #include "counter.h"
@@ -36,20 +39,39 @@ int servo_delta = 1;
 Ultrasonic ultrasonic(/*da aggiungere i pin*/); //(trig, echo)      /////////////////
 
 int zucchero;
-long int sleepTimer;
+long int sleepTimer 40000000;
 volatile int funzionamento;
 BevandaImpl* Chocolate;
 BevandaImpl* Tea;
 BevandaImpl* Coffee;
 
 void Avvio(){
+  Timer1.attachInterrupt(start_sleep, sleepTimer);
+  
   lcd.setCursor(2, 1); // Set the cursor on the third column and first row.  
     //lcd.begin(16, 2);
   lcd.print("Benvenuto, seleziona la tua bevanda");
   delay(5000);
   lcd.clear();
   lcd.setCursor(2, 1); // Set the cursor on the third column and first row.
+  
+  
 }
+
+void start_sleep()
+{
+  if(detectedStatus == false)
+      {
+        Timer1.detachInterrupt();
+        funzionamento = 2;
+      }
+  else{
+        Timer1.detachInterrupt();
+        Avvio();
+    }
+  
+  }
+
 
 void Zucchero(){
   int newValue = analogRead(POT_PIN);
@@ -228,11 +250,13 @@ void setup() {
   lcd.backlight();
   sleepTimer = 10000000;
   Timer1.initialize();
+  randomSeed(analogRead(0));
   Avvio();
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
+  noInterrupts();
   switch(funzionamento){
     case 0://assistenza
       Assistenza();
