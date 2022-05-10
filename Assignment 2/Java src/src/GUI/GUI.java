@@ -93,6 +93,7 @@ public class GUI extends JFrame {
     		this.logics.resetBeverageCount();
     		try {
 				this.updateView();
+				this.logics.SendChange(CHOCOLATE);
 			} catch (Exception e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
@@ -113,6 +114,7 @@ public class GUI extends JFrame {
     		this.logics.makeBevarage(CHOCOLATE);
     		try {
 				this.updateView();
+				this.logics.SendChange(CHOCOLATE);
 			} catch (Exception e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
