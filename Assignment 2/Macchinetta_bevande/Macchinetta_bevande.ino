@@ -1,6 +1,4 @@
-//#include <Servo.h>
-//#include <LiquidCrystal.h>
-#include <LiquidCrystal_I2C.h> 
+#include <LiquidCrystal_I2C.h>
 #include <Ultrasonic.h>
 #include <avr/sleep.h>
 #include <avr/power.h>
@@ -10,14 +8,15 @@
 
 // TODO       AGGIUNGERE millis() per i vari timer
 
+
+
 /*Librerie con strumenti di utilità*/
 #include "counter.h"
 #include "MsgService.h"
-//#include "Timer.h"
 
 /*Librerie per le componenti arduino*/
 #include "servo_motor_impl.h"
-#include "lm35_impl.h"
+//#include "lm35_impl.h"
 //#include "ComponentLib/ServoTimer2.h"
 
 #include "bevandaImpl.h"
@@ -26,17 +25,13 @@
 #define trigPin 7
 #define pirPin 4
 #define servoPin 5
-#define buttonUp  1                   //////////////////
-#define buttonDown  2                 /////////////////
-#define buttonMake  0
 
-
-
-const int buttonUp = 1                   //////////////////
-const int buttonDown = 2                 /////////////////
-const int buttonMake = 0
+const int buttonUp = 1;
+const int buttonDown = 2;
+const int buttonMake = 0;
 int buttonUpState=0;
 int buttonDownState=0;
+int buttonMakeState=0;
 int servo_pin = 10;
 ServoMotor* pMotor;
 LiquidCrystal_I2C lcd = LiquidCrystal_I2C(0x27,20,4); 
@@ -45,7 +40,13 @@ int TMP_PIN = A1;
 int SDA_PIN = A4;
 int SCL_PIN = A5;
 
+const char CIOCCOLATO = 15;
+const char TEA = 16;
+const char CAFFE = 17;
 
+
+int current;
+int j=0;
 
 long int CurrentTime = 0;
 long int CurrentTimeCheck = 0;
@@ -54,6 +55,8 @@ long int CheckTime = 0;
 long int Timeout = 0;
 long int TimeoutInit = 0;
 
+int counter = 100;
+int tempoCal = 1000;
 
 int servo_pos = 0;
 int servo_delta = 1;
@@ -61,127 +64,93 @@ int servo_delta = 1;
 Ultrasonic ultrasonic(7,8); //(trig, echo)
 
 int zucchero;
-long int sleepTimer 40000000;
 volatile int funzionamento;
 BevandaImpl* Chocolate;
 BevandaImpl* Tea;
 BevandaImpl* Coffee;
 
- void Avvio(){
-  
-  
-  lcd.setCursor(2, 1); // Set the cursor on the third column and first row.  
-    //lcd.begin(16, 2);
-  lcd.print("Benvenuto, seleziona la tua bevanda");
-  delay(5000);
-  lcd.clear();
-  lcd.setCursor(2, 1); // Set the cursor on the third column and first row.
 
-  //abilito i pulsanti
-  
-  
-} */
+void SelezioneBevanda(){
 
 
-/*void start_sleep()
-{
-  if(detectedStatus == false)
-      {
-        Timer1.detachInterrupt();
-        funzionamento = 2;
-      }
-  else{
-        Timer1.detachInterrupt();
-        Avvio();
-    }
-  
-  } */
-
-
-void Zucchero(){
-  int newValue = analogRead(POT_PIN);
-  zucchero = newValue/256 ; //assegno un valore tra 0 e 3
-}
-
-
-void SelezioneBevanda()
-
-    if(bevanda.beverage && bevanda.beverage && bevanda.beverage == 0)
-    {
-      funzionamento=0;
-      serial.println("assistance required");
-      break;
-      }
-
-    //abilita bottoni
-
+    int newValue = analogRead(POT_PIN);
+    zucchero = newValue/256 ; //assegno un valore tra 0 e 3
     buttonUpState = digitalRead(buttonUp);
     buttonDownState = digitalRead(buttonDown);
+    buttonMakeState = digitalRead(buttonMake);
 
     if (buttonUpState == HIGH) {
-      if(i=3)
+      if(j=3)
       {
-        i=1;
+        j=1;
+        Serial.print("Cioccolato");
       }
       else
       {
-      i++;
+      j++;
+      Serial.println(j+14);
       }
     }
-    if (buttonDownState == HIGH) {
-      if(i=1)
+    if (buttonDownState == HIGH) 
+    {
+      if(j=1)
       {
-        i=3;
+        j=3;
+        Serial.print("Caffè");
       }
       else
       {
-        i--;
+        j--;
+        Serial.println(j+14);
       }
-
-      
-      }
+    }
     
-    if(i==1)
+    /*if(j==1)
     {
       serial.println("Cioccolato");
       }
-    else if(i==2)
+    else if(j==2)
     {
       serial.println("Tea");
       }
-    else if(i==3)
+    else if(j==3)
     {
       serial.println("Caffè");
-    }
+    }*/
 
 
   //quando viene premuto make
-  buttonUpState = digitalRead(buttonMake);
-  
-if(bevanda.beverage==0)
-{
-  serial.println("bevanda non disponibile");
+  if (buttonMakeState == HIGH)
+  {
+    if(counter==0)
+      {
+        Serial.print("bevanda non disponibile");
+      }
+    else
+       {
+        Creazione();
+       }
+    
   }
-else{
-  Creazione();
-    }
+  
+
+
 }
 
 
 void Creazione(){
 
-  serial.print("Making a ....");
-  if(i==1)
-    {
-      serial.println("Cioccolato");
+  Serial.print("Making a ....");
+  if(j==1)    {
+      Serial.println("Cioccolato");
       }
-    else if(i==2)
+    else if(j==2)
     {
-      serial.println("Tea");
+      Serial.println("Tea");
       }
-    else if(i==3)
+    else if(j==3)
     {
-      serial.println("Caffè");
+      Serial.println("Caffè");
     }
   
   pMotor->on();
@@ -199,7 +168,7 @@ void Creazione(){
   Serial.print("La bevanda e' pronta"); //deve essere scritta sul display
   delay(1000);
   TimeoutInit = millis();
-  Serial.ptint("ritirare la bevanda");
+  Serial.print("ritirare la bevanda");
   RitiroBevanda();
   /*
   myservo.write(0);
@@ -210,17 +179,17 @@ void Creazione(){
 void RitiroBevanda(){
 
 pMotor->setPosition(0);
-TimeOut= millis();
+pMotor->off();
+Timeout= millis();
 if(ultrasonic.distanceRead()>=40)
 {
-  serial.println("bevanda ritirata");
+  Serial.print("bevanda ritirata");
   }
 else if(ultrasonic.distanceRead()<40)
    {
-    if(TimeOut - TimeoutInit >60000)
+    if(Timeout - TimeoutInit >60000)
       {
       Serial.print("Nessuno e' stato rilevato");
-      
       }
      else{
         RitiroBevanda();
@@ -236,35 +205,35 @@ void Sleep(){
 
 
 void Check(){
-  int temperatura = analogRead(//pinTemperatura);
-  int value_in_mV = 4.8876 * value; 
+  int temperatura = analogRead(TMP_PIN);
+  int value_in_mV = 4.8876 * temperatura; 
   double value_in_C = ( value_in_mV - 500) * 0.1;
   pMotor->on();
   for (int i = 0; i < 180; i++) {
-    Serial.println(pos);
-    pMotor->setPosition(pos);
+    Serial.println(servo_pos);
+    pMotor->setPosition(servo_pos);
     // delay(15);            
-    pos += servo_delta;
+    servo_pos += servo_delta;
   }
   if(value_in_C < 17 || value_in_C > 24)
   {
     pMotor->setPosition(0);
     pMotor->off();
     lcd.print("Assistance Required");
-    Assistenza();
+    //Assistenza();
   }
   pMotor->on();
   for (int i = 180; i >= 1; i++)
   {
-    pMotor->setPosition(pos);
-    pos += servo_delta;
+    pMotor->setPosition(servo_pos);
+    servo_pos += servo_delta;
     }
    pMotor->off();
   
   if(value_in_C < 17 || value_in_C > 24)
   {
     lcd.print("Assistance Required");
-    Assistenza();
+    //Assistenza();
   }
 }
 
@@ -273,9 +242,11 @@ void Check(){
 void setup() {
   // put your setup code here, to run once:
 
-  pinMode(//PIR_PIN,INPUT);
+  pinMode(pirPin,INPUT);
   Serial.print("Calibrating sensor... ");
-  for(int i = 0; i < CALIBRATION_TIME_SEC; i++){
+  for(int i = 0; i < tempoCal; i++){
+                                                                        ///////////////////////////////////////////////////////////////////////////////////////////////
+  }
   int detectedStatus = false;
 
   previousTime = millis();
@@ -302,32 +273,41 @@ void setup() {
   servo_delta = 1;
   lcd.init();
   lcd.backlight();
-  sleepTimer = 10000000;
-  //Timer1.initialize();
-  //randomSeed(analogRead(0));
-  Avvio();
-}
+
+  lcd.setCursor(2, 1); // Set the cursor on the third column and first row.  
+    //lcd.begin(16, 2);
+  lcd.print("Benvenuto, seleziona la tua bevanda");
+  delay(5000);
+  lcd.clear();
+  lcd.setCursor(2, 1); // Set the cursor on the third column and first row.
+
+  pinMode(1, INPUT);
+  pinMode(2, INPUT);
+  pinMode(3, INPUT);
+
+ }
 
 void loop() {
   // put your main code here, to run repeatedly:
-  noInterrupts();
   switch(funzionamento){
     case 0://assistenza
-      Assistenza();
+      //Assistenza();
       break;
     case 1:
       
       CurrentTime = millis();
       CurrentTimeCheck=millis();
+
+      current = digitalRead(pirPin);
       
-      if(detectedStatus==true)
+      if(current==true)
       {
-        CurrentTime = millis();
+        previousTime = CurrentTime;
       }
       
-      if(CurrentTime-PreviousTime>=40000)
+      if(CurrentTime-previousTime>=40000)
       {
-        PreviousTime=CurrentTime;
+        previousTime=CurrentTime;
         funzionamento=2;
       }
         
@@ -341,7 +321,7 @@ void loop() {
       break;
     case 2://sleep
     
-        sleep();
+        Sleep();
     
       break;
   };
