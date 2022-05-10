@@ -25,12 +25,21 @@
 
 const int buttonUp = //numeroPin;                   //////////////////
 const int buttonDown = //numeroPin;                 /////////////////
+const int buttonMake = //numeroPin;
 int buttonUpState=0;
 int buttonDownState=0;
 int servo_pin = 10;
 ServoMotor* pMotor;
 LiquidCrystal_I2C lcd = LiquidCrystal_I2C(0x27,20,4); 
 int POT_PIN = A1;
+
+
+long int CurrentTime = 0;
+long int CurrentTimeCheck = 0;
+long int previousTime = 0;
+long int CheckTime = 0;
+long int Timeout = 0;
+long int TimeoutInit = 0;
 
 
 int servo_pos = 0;
@@ -45,8 +54,8 @@ BevandaImpl* Chocolate;
 BevandaImpl* Tea;
 BevandaImpl* Coffee;
 
-void Avvio(){
-  Timer1.attachInterrupt(start_sleep, sleepTimer);
+ void Avvio(){
+  
   
   lcd.setCursor(2, 1); // Set the cursor on the third column and first row.  
     //lcd.begin(16, 2);
@@ -54,9 +63,12 @@ void Avvio(){
   delay(5000);
   lcd.clear();
   lcd.setCursor(2, 1); // Set the cursor on the third column and first row.
+
+  //abilito i pulsanti
   
   
-}
+} */
+
 
 void start_sleep()
 {
@@ -85,7 +97,7 @@ void SelezioneBevanda()
     {
       funzionamento=0;
       serial.println("assistance required");
-      loop();
+      break;
       }
 
     //abilita bottoni
@@ -130,11 +142,12 @@ void SelezioneBevanda()
     }
 
 
-//quando viene premuto make
+  //quando viene premuto make
+  buttonUpState = digitalRead(buttonMake);
+  
 if(bevanda.beverage==0)
 {
   serial.println("bevanda non disponibile");
-  SelezioneBevanda();
   }
 else{
   Creazione();
@@ -144,10 +157,22 @@ else{
 
 void Creazione(){
 
-  serial.println("Making a ....");
+  serial.print("Making a ....");
+  if(i==1)
+    {
+      serial.println("Cioccolato");
+      }
+    else if(i==2)
+    {
+      serial.println("Tea");
+      }
+    else if(i==3)
+    {
+      serial.println("Caffè");
+    }
   
   pMotor->on();
-  for (int i = 0; i < 181; i++) {
+  for (int i = 0; i < 180; i++) {
     Serial.println(servo_pos);
     pMotor->setPosition(servo_pos);         
     // delay(15);
@@ -158,8 +183,11 @@ void Creazione(){
   pMotor->off();
   servo_pos -= servo_delta;
   servo_delta = -servo_delta;
-  Serial.println("La bevanda e' pronta"); //deve essere scritta sul display
-  delay(1000);  
+  Serial.print("La bevanda e' pronta"); //deve essere scritta sul display
+  delay(1000);
+  TimeoutInit = millis();
+  Serial.ptint("ritirare la bevanda");
+  RitiroBevanda();
   /*
   myservo.write(0);
   delay(1500);     //va cambiato rispetto al tempo di creazione
@@ -167,14 +195,24 @@ void Creazione(){
 }
 
 void RitiroBevanda(){
-serial.ptintln("ritirare la bevanda");
+
+pMotor->setPosition(0);
+TimeOut= millis();
 if(ultrasonic.distanceRead()>=40)
 {
   serial.println("bevanda ritirata");
-  pMotor->setPosition(0);
   }
-else if(ultrasonic.distanceRead()<40 && //timeoutCounter>tempotimeout)
-  pMotor->setPosition(0);
+else if(ultrasonic.distanceRead()<40)
+   {
+    if(TimeOut - TimeoutInit >60000)
+      {
+      Serial.print("Nessuno e' stato rilevato");
+      
+      }
+     else{
+        RitiroBevanda();
+      }
+   }
 }
 
 void Sleep(){
@@ -226,6 +264,9 @@ void setup() {
   Serial.print("Calibrating sensor... ");
   for(int i = 0; i < CALIBRATION_TIME_SEC; i++){
   int detectedStatus = false;
+
+  previousTime = millis();
+  CheckTime = millis();
   
  /* int current = digitalRead(PIR_PIN);
   if (current != detectedStatus ){
@@ -249,8 +290,8 @@ void setup() {
   lcd.init();
   lcd.backlight();
   sleepTimer = 10000000;
-  Timer1.initialize();
-  randomSeed(analogRead(0));
+  //Timer1.initialize();
+  //randomSeed(analogRead(0));
   Avvio();
 }
 
@@ -262,14 +303,32 @@ void loop() {
       Assistenza();
       break;
     case 1:
-      SelezioneBevanda()
+      
+      CurrentTime = millis();
+      CurrentTimeCheck=millis();
+      
+      if(detectedStatus==true)
+      {
+        CurrentTime = millis();
+      }
+      
+      if(CurrentTime-PreviousTime>=40000)
+      {
+        PreviousTime=CurrentTime;
+        funzionamento=2;
+      }
+        
+      if(CurrentTimeCheck-CheckTime>=180000)
+      {
+        CheckTime=CurrentTimeCheck;
+        Check();
+      }
+    SelezioneBevanda();
+
       break;
     case 2://sleep
-      
-      if(detectedStatus == false && /* timer ha concluso*/
-      {
+    
         sleep();
-      }
     
       break;
   };
