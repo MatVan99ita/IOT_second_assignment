@@ -59,8 +59,8 @@ public class LogicsImpl implements Logics {
 			if(msgParsed.length == 5) {
 				for (String string : msgParsed) {
 					System.out.println(string);
-					if(msgParsed.equals("")) {
-						
+					if(msgParsed.equals("")) { //Controllo su elementi che non vengono inviati
+						getChanges();
 					}
 				}
 				this.beverages.get("Chocolate").setQuantity(Integer.parseInt(msgParsed[0]));
