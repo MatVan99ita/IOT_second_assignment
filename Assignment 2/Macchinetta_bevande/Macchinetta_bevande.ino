@@ -22,16 +22,29 @@
 
 #include "bevandaImpl.h"
 
+#define echoPin 8
+#define trigPin 7
+#define pirPin 4
+#define servoPin 5
+#define buttonUp  1                   //////////////////
+#define buttonDown  2                 /////////////////
+#define buttonMake  0
 
-const int buttonUp = //numeroPin;                   //////////////////
-const int buttonDown = //numeroPin;                 /////////////////
-const int buttonMake = //numeroPin;
+
+
+const int buttonUp = 1                   //////////////////
+const int buttonDown = 2                 /////////////////
+const int buttonMake = 0
 int buttonUpState=0;
 int buttonDownState=0;
 int servo_pin = 10;
 ServoMotor* pMotor;
 LiquidCrystal_I2C lcd = LiquidCrystal_I2C(0x27,20,4); 
-int POT_PIN = A1;
+int POT_PIN = A0;
+int TMP_PIN = A1;
+int SDA_PIN = A4;
+int SCL_PIN = A5;
+
 
 
 long int CurrentTime = 0;
@@ -45,7 +58,7 @@ long int TimeoutInit = 0;
 int servo_pos = 0;
 int servo_delta = 1;
 
-Ultrasonic ultrasonic(/*da aggiungere i pin*/); //(trig, echo)      /////////////////
+Ultrasonic ultrasonic(7,8); //(trig, echo)
 
 int zucchero;
 long int sleepTimer 40000000;
@@ -70,7 +83,7 @@ BevandaImpl* Coffee;
 } */
 
 
-void start_sleep()
+/*void start_sleep()
 {
   if(detectedStatus == false)
       {
@@ -82,7 +95,7 @@ void start_sleep()
         Avvio();
     }
   
-  }
+  } */
 
 
 void Zucchero(){
