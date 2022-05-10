@@ -55,12 +55,26 @@ public class LogicsImpl implements Logics {
 		System.out.println("Waiting Arduino for rebooting...");	
 		Thread.sleep(4000);
 		System.out.println("Ready.");
-		
+		channel.sendMsg("Banana");
 		this.arduinoMsg = channel.receiveMsg();
-		System.out.println("Received: "+this.arduinoMsg);
+		System.out.println("Received: " + this.arduinoMsg.toString());
+		Thread.sleep(500);
+		String[] msgParsed = this.arduinoMsg.split("-");
 		
-		return this.beverages.get(beverage).getQuantity();
+		System.out.println("parsato: " + msgParsed[0]);
+		
+		switch (beverage) {
+			case "Chocolate":
+			 	return Integer.parseInt(msgParsed[0]);
+			case "Coffee":
+			 	return Integer.parseInt(msgParsed[1]);
+			case "Tea":
+			 	return Integer.parseInt(msgParsed[2]);
+			default:
+				return 0;
+		}
 	}
+	
 
 	@Override
 	public String getStatus() {

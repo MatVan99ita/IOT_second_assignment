@@ -122,14 +122,13 @@ public class GUI extends JFrame {
     	refillButton.addActionListener(refill);
     	repairButton.addActionListener(repair);
     	this.setVisible(true);
+    	
     	try {
-			this.updateView();
-		} catch (Exception e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-    	
-    	
+    		this.updateView();
+    	} catch (Exception e1) {
+    		// TODO Auto-generated catch block
+    		e1.printStackTrace();
+    	}
     }
     /**
      * Updating the view with the arduino info
