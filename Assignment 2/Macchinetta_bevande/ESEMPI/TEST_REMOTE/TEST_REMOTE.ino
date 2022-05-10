@@ -21,7 +21,7 @@ void loop(){
   Msg* msg = MsgService.receiveMsg();
   delay(500);
   lcd.print(msg->getContent());
-  MsgService.sendMsg("45-25-30-3-SFACIMM");
+  MsgService.sendMsg("45-25-30-3-Assistenza");
   /* NOT TO FORGET: msg deallocation */
   delete msg;
 }

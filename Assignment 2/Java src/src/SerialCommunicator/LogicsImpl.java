@@ -55,18 +55,26 @@ public class LogicsImpl implements Logics {
 		String[] msgParsed = this.arduinoMsg.split("-");
 		System.out.println("Received: " + this.arduinoMsg.toString());
 		
-		if(msgParsed.length == 5) {
-			for (String string : msgParsed) {
-				System.out.println(string);
+		try {
+			if(msgParsed.length == 5) {
+				for (String string : msgParsed) {
+					System.out.println(string);
+					if(msgParsed.equals("")) {
+						
+					}
+				}
+				this.beverages.get("Chocolate").setQuantity(Integer.parseInt(msgParsed[0]));
+				this.beverages.get("Tea").setQuantity(Integer.parseInt(msgParsed[1]));
+				this.beverages.get("Coffee").setQuantity(Integer.parseInt(msgParsed[2]));
+				this.selfTestCount = Integer.parseInt(msgParsed[3]);
+				this.status = msgParsed[4];
+			} else {
+				getChanges();
 			}
-			this.beverages.get("Chocolate").setQuantity(Integer.parseInt(msgParsed[0]));
-			this.beverages.get("Tea").setQuantity(Integer.parseInt(msgParsed[1]));
-			this.beverages.get("Coffee").setQuantity(Integer.parseInt(msgParsed[2]));
-			this.selfTestCount = Integer.parseInt(msgParsed[3]);
-			this.status = msgParsed[4];
-		} else {
-			getChanges();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
+		
 	}
 	
 	@Override

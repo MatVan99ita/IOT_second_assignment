@@ -79,8 +79,8 @@ public class GUI extends JFrame {
     	this.state_content = new JLabel("");
     	this.refillButton = new JButton("Refill");
     	this.repairButton = new JButton("Repair");
-    	//this.refillButton.setEnabled(false);
-    	//this.repairButton.setEnabled(false);
+    	this.refillButton.setEnabled(false);
+    	this.repairButton.setEnabled(false);
         assistantPanel.add(state_content); // Components Added using Flow Layout
         assistantPanel.add(this.refillButton);
         assistantPanel.add(this.repairButton);
@@ -144,17 +144,19 @@ public class GUI extends JFrame {
     	defaultListModel.set(3, "Caffè: " + this.logics.getSpecifiedBeverageCount(GUI.COFFEE));
     	defaultListModel.set(4, "Test fatti: " + this.logics.getSelfTestCount());
     	
+    	this.AssistantButtonActivation(this.logics.getStatus());
     	
-    	
-    	if(this.logics.getStatus() == "Assistant") {
-    		this.AssistantButtonActivation();
-    	}
-    
     }
     
-    private void AssistantButtonActivation() {
-    	this.refillButton.setEnabled(true);
-    	this.repairButton.setEnabled(true);
+    private void AssistantButtonActivation(String status) {
+    	
+    	if (status.equals("Refill")) {
+    		this.refillButton.setEnabled(true);
+    	} else if (status.equals("Assistenza")) {
+    		this.refillButton.setEnabled(true);
+        	this.repairButton.setEnabled(true);
+    	}
+    	
     }
 }
 
