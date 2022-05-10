@@ -105,19 +105,6 @@ void SelezioneBevanda(){
       }
     }
     
-    /*if(j==1)
-    {
-      serial.println("Cioccolato");
-      }
-    else if(j==2)
-    {
-      serial.println("Tea");
-      }
-    else if(j==3)
-    {
-      serial.println("Caffè");
-    }*/
-
 
   //quando viene premuto make
   if (buttonMakeState == HIGH)
@@ -220,7 +207,8 @@ void Check(){
     pMotor->setPosition(0);
     pMotor->off();
     lcd.print("Assistance Required");
-    //Assistenza();
+    funzionamento=0;
+    //Assistenza();                                                   /////////////////////////////
   }
   pMotor->on();
   for (int i = 180; i >= 1; i++)
@@ -233,7 +221,8 @@ void Check(){
   if(value_in_C < 17 || value_in_C > 24)
   {
     lcd.print("Assistance Required");
-    //Assistenza();
+    funzionamento=0;
+    //Assistenza();                                                   ///////////////////////////////
   }
 }
 
@@ -291,7 +280,7 @@ void loop() {
   // put your main code here, to run repeatedly:
   switch(funzionamento){
     case 0://assistenza
-      //Assistenza();
+      //Assistenza();                                                               //////////////////////////////////////////////
       break;
     case 1:
       
