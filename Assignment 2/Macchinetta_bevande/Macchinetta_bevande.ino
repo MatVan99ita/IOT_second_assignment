@@ -6,18 +6,14 @@
 #include "TimerOne.h"
 #include "ServoTImer2.h"
 
-// TODO       AGGIUNGERE millis() per i vari timer
-
-
-
 /*Librerie con strumenti di utilità*/
 #include "counter.h"
 #include "MsgService.h"
 
 /*Librerie per le componenti arduino*/
 #include "servo_motor_impl.h"
-//#include "lm35_impl.h"
-//#include "ComponentLib/ServoTimer2.h"
+//#include "lm35_impl.h"                                      ////////////////////////NON VA  NON VA  NON VA NON VA
+//#include "ComponentLib/ServoTimer2.h"                         ////////////////////////NON VA  NON VA  NON VA NON VA
 
 #include "bevandaImpl.h"
 
@@ -40,11 +36,6 @@ int TMP_PIN = A1;
 int SDA_PIN = A4;
 int SCL_PIN = A5;
 
-const char CIOCCOLATO = 15;
-const char TEA = 16;
-const char CAFFE = 17;
-
-
 int current;
 int j=0;
 
@@ -55,7 +46,7 @@ long int CheckTime = 0;
 long int Timeout = 0;
 long int TimeoutInit = 0;
 
-int counter = 100;
+int counter = 100;                                                //valore da rimuovere, in accordo a java
 int tempoCal = 1000;
 
 int servo_pos = 0;
@@ -80,38 +71,46 @@ void SelezioneBevanda(){
     buttonMakeState = digitalRead(buttonMake);
 
     if (buttonUpState == HIGH) {
-      if(j=3)
+      if(j==3)
       {
         j=1;
-        Serial.print("Cioccolato");
+        Serial.print("Chocolate");
       }
-      else
+      else if(j==1)
       {
-      j++;
-      Serial.println(j+14);
+      j++;                                              //j=2
+      Serial.print("Tea");
       }
+      else if(j==2){
+      j++;                                              //j=3
+      Serial.print("Coffee");
+        }
     }
     if (buttonDownState == HIGH) 
     {
-      if(j=1)
+      if(j==1)
       {
         j=3;
-        Serial.print("Caffè");
+        Serial.print("Coffee");
       }
-      else
+      else if (j==3)
       {
-        j--;
-        Serial.println(j+14);
+        j--;                                            //j=2
+        Serial.print("Tea");
       }
+      else if (j==2){
+        j--;                                            //j=1
+        Serial.print("Chocolate");
+        }
     }
     
 
   //quando viene premuto make
   if (buttonMakeState == HIGH)
   {
-    if(counter==0)
+    if(counter==0)                                            //valore da cambiare, in accordo a java
       {
-        Serial.print("bevanda non disponibile");
+        Serial.print("Not available");
       }
     else
        {
@@ -129,7 +128,7 @@ void Creazione(){
 
   Serial.print("Making a ....");
   if(j==1)    {
-      Serial.println("Cioccolato");
+      Serial.println("Chocolate");
       }
     else if(j==2)
     {
@@ -137,22 +136,25 @@ void Creazione(){
       }
     else if(j==3)
     {
-      Serial.println("Caffè");
+      Serial.println("Coffee");
     }
   
   pMotor->on();
   for (int i = 0; i < 180; i++) {
     Serial.println(servo_pos);
     pMotor->setPosition(servo_pos);         
-    // delay(15);
+    delay(15);
     lcd.print(String("Rotazione: ") + servo_pos);
     lcd.setCursor(2, 1);
     servo_pos += servo_delta;
   }
+
+  // da fare al contrario
+  
   pMotor->off();
-  servo_pos -= servo_delta;
-  servo_delta = -servo_delta;
-  Serial.print("La bevanda e' pronta"); //deve essere scritta sul display
+  servo_pos =0;
+  
+  Serial.print("Drink ready"); //deve essere scritta sul display
   delay(1000);
   TimeoutInit = millis();
   Serial.print("ritirare la bevanda");
@@ -234,8 +236,9 @@ void setup() {
   pinMode(pirPin,INPUT);
   Serial.print("Calibrating sensor... ");
   for(int i = 0; i < tempoCal; i++){
-                                                                        ///////////////////////////////////////////////////////////////////////////////////////////////
+  delay(5000);
   }
+  Serial.print("Calibrated");
   int detectedStatus = false;
 
   previousTime = millis();
@@ -280,7 +283,15 @@ void loop() {
   // put your main code here, to run repeatedly:
   switch(funzionamento){
     case 0://assistenza
+
+    
       //Assistenza();                                                               //////////////////////////////////////////////
+
+      //if(non serve piu assistenza)
+      //funzionamento=1;
+
+
+      
       break;
     case 1:
       
