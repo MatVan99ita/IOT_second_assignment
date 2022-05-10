@@ -1,4 +1,5 @@
 import GUI.GUI;
+import jssc.SerialPortList;
 
 
 /**
@@ -30,8 +31,10 @@ import GUI.GUI;
 public class Main {
 	public static void main(String[] args) {
 
-    	
-        new GUI(10, args);
+
+		String[] portNames = SerialPortList.getPortNames();
+		System.out.println(portNames[0]);
+        new GUI(10, portNames[0]);
         
         //Logics logics = new LogicsImpl();
         //logics.Blink();

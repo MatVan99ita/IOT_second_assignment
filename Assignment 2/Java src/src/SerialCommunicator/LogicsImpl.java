@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import SerialCommunicator.SerialCommChannel;
+import jssc.SerialPortList;
 
 
 public class LogicsImpl implements Logics {
@@ -16,10 +17,11 @@ public class LogicsImpl implements Logics {
 	private String status;
 	private String operation;
 	private Map<String, BeverageImpl> beverages;
-	SerialCommChannel channel;
+	private CommChannel channel;
+	private String arduinoMsg;
 	
-	public LogicsImpl(String[] args) throws Exception {
-		channel = new SerialCommChannel(args[0], 9600);
+	public LogicsImpl(String args) throws Exception {
+		channel = new SerialCommChannel(args, 9600);
 	
 		this.beverages = Map.of(
 				"Chocolate", new BeverageImpl("Chocolate"),
@@ -31,7 +33,6 @@ public class LogicsImpl implements Logics {
 	
 	@Override
 	public void SendChange(String status) throws Exception {
-		SerialCommChannel channel = new SerialCommChannel("COM3", 9600);
 		System.out.println("Waiting Arduino for rebooting...");		
 		Thread.sleep(4000);
 		System.out.println("Ready.");
@@ -49,16 +50,14 @@ public class LogicsImpl implements Logics {
 	}
 
 	@Override
-	public int getSpecifiedBeverageCount(String beverage){
-		try {
-			Thread.sleep(4000);
-			channel.sendMsg(beverage);
-			String msg = channel.receiveMsg();
-			System.out.println("Received: "+msg);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	public int getSpecifiedBeverageCount(String beverage) throws Exception{
+		
+		System.out.println("Waiting Arduino for rebooting...");	
+		Thread.sleep(4000);
+		System.out.println("Ready.");
+		
+		this.arduinoMsg = channel.receiveMsg();
+		System.out.println("Received: "+this.arduinoMsg);
 		
 		return this.beverages.get(beverage).getQuantity();
 	}

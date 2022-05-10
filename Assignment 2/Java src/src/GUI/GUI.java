@@ -50,7 +50,7 @@ public class GUI extends JFrame {
     
     
     
-    public GUI(final int size, final String[] args){
+    public GUI(final int size, final String args){
     	try {
 			this.logics = new LogicsImpl(args);
 		} catch (Exception e3) {
@@ -128,6 +128,8 @@ public class GUI extends JFrame {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
+    	
+    	
     }
     /**
      * Updating the view with the arduino info

@@ -17,13 +17,11 @@ void setup(){
 }
 
 void loop(){
-  if (MsgService.isMsgAvailable()){
-    lcd.setCursor(2, 1); // Set the cursor on the third column and first row.
-    Msg* msg = MsgService.receiveMsg();
-    delay(500);
-    lcd.print(msg->getContent());
-    MsgService.sendMsg("SIOCCOLATOH: " + 45);
-    /* NOT TO FORGET: msg deallocation */
-    delete msg;
-  }
-};
+  lcd.setCursor(2, 1); // Set the cursor on the third column and first row.
+  Msg* msg = MsgService.receiveMsg();
+  delay(500);
+  lcd.print(msg->getContent());
+  MsgService.sendMsg("SIOCCOLATOH: " + 45);
+  /* NOT TO FORGET: msg deallocation */
+  delete msg;
+}
