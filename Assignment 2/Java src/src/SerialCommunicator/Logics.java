@@ -35,4 +35,6 @@ public interface Logics {
 	 */
 	public void setStatus(String status);
 
+	void getChanges() throws Exception;
+
 }

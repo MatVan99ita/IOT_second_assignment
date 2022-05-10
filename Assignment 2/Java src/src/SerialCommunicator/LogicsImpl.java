@@ -5,6 +5,11 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.jar.Attributes.Name;
+import java.util.stream.IntStream;
+
+import javax.lang.model.element.Element;
+
 import SerialCommunicator.SerialCommChannel;
 import jssc.SerialPortList;
 
@@ -22,7 +27,7 @@ public class LogicsImpl implements Logics {
 	
 	public LogicsImpl(String args) throws Exception {
 		channel = new SerialCommChannel(args, 9600);
-	
+		
 		this.beverages = Map.of(
 				"Chocolate", new BeverageImpl("Chocolate"),
 				"Tea", new BeverageImpl("Tea"),
@@ -40,6 +45,31 @@ public class LogicsImpl implements Logics {
 	}
 	
 	@Override
+	public void getChanges() throws Exception {
+		System.out.println("Waiting Arduino for rebooting...");	
+		Thread.sleep(4000);
+		System.out.println("Ready.");
+		int index = 0;
+		this.arduinoMsg = channel.receiveMsg();
+		Thread.sleep(500);
+		String[] msgParsed = this.arduinoMsg.split("-");
+		System.out.println("Received: " + this.arduinoMsg.toString());
+		
+		if(msgParsed.length == 5) {
+			for (String string : msgParsed) {
+				System.out.println(string);
+			}
+			this.beverages.get("Chocolate").setQuantity(Integer.parseInt(msgParsed[0]));
+			this.beverages.get("Tea").setQuantity(Integer.parseInt(msgParsed[1]));
+			this.beverages.get("Coffee").setQuantity(Integer.parseInt(msgParsed[2]));
+			this.selfTestCount = Integer.parseInt(msgParsed[3]);
+			this.status = msgParsed[4];
+		} else {
+			getChanges();
+		}
+	}
+	
+	@Override
 	public int getSelfTestCount() {
 		return this.selfTestCount;
 	}
@@ -51,28 +81,7 @@ public class LogicsImpl implements Logics {
 
 	@Override
 	public int getSpecifiedBeverageCount(String beverage) throws Exception{
-		
-		System.out.println("Waiting Arduino for rebooting...");	
-		Thread.sleep(4000);
-		System.out.println("Ready.");
-		channel.sendMsg("Banana");
-		this.arduinoMsg = channel.receiveMsg();
-		System.out.println("Received: " + this.arduinoMsg.toString());
-		Thread.sleep(500);
-		String[] msgParsed = this.arduinoMsg.split("-");
-		
-		System.out.println("parsato: " + msgParsed[0]);
-		
-		switch (beverage) {
-			case "Chocolate":
-			 	return Integer.parseInt(msgParsed[0]);
-			case "Coffee":
-			 	return Integer.parseInt(msgParsed[1]);
-			case "Tea":
-			 	return Integer.parseInt(msgParsed[2]);
-			default:
-				return 0;
-		}
+		return this.beverages.get(beverage).getQuantity();
 	}
 	
 

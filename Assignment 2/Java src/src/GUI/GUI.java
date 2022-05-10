@@ -135,12 +135,17 @@ public class GUI extends JFrame {
      * @throws Exception 
      */
     private void updateView() throws Exception {
+    	
+    	logics.getChanges();
+    	
     	this.state_content.setText("Stato attuale: " + this.logics.getStatus());
     	defaultListModel.set(1, "Cioccolata: " + this.logics.getSpecifiedBeverageCount(GUI.CHOCOLATE));
-    	defaultListModel.set(2, "Caffè: " + this.logics.getSpecifiedBeverageCount(GUI.COFFEE));
-    	defaultListModel.set(3, "Tè: " + this.logics.getSpecifiedBeverageCount(GUI.TEA));
+    	defaultListModel.set(2, "Tè: " + this.logics.getSpecifiedBeverageCount(GUI.TEA));
+    	defaultListModel.set(3, "Caffè: " + this.logics.getSpecifiedBeverageCount(GUI.COFFEE));
     	defaultListModel.set(4, "Test fatti: " + this.logics.getSelfTestCount());
-
+    	
+    	
+    	
     	if(this.logics.getStatus() == "Assistant") {
     		this.AssistantButtonActivation();
     	}

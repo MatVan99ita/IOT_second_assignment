@@ -23,6 +23,10 @@ public class BeverageImpl implements Beverage{
 		this.quantity = BEVERAGE_AMUOUNT;
 	}
 	
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
+	}
+	
 	public int getQuantity() {
 		return this.quantity;
 	}
