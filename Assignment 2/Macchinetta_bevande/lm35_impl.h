@@ -8,10 +8,12 @@ class LM35Impl: public LM35 {
 
 public:
   LM35Impl(int pin);
-  double convertToC(double value);
+  void convertToC(double value);
+  bool checkTemp();
 
 private:
   int pin;
+  double valueInC;
 };
 
 #endif

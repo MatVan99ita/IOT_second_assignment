@@ -4,7 +4,8 @@
 class LM35 {
 
 public:
-  virtual double convertToC(double value) = 0;
+  virtual void convertToC(double value) = 0;
+  virtual bool checkTemp() = 0;
 };
 
 #endif

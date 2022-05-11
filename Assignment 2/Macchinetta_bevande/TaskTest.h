@@ -40,7 +40,13 @@ void TaskTest::makeTest(int servoPin, int lmPin){
     this->servo->off();
 
     this->lm35->LM35Impl(lmPin);
-
+    if(this->lm35->checkTemp){
+        //Va bene
+        
+    } else {
+        //Va in assistenza
+        
+    }
 
 }
 

@@ -20,14 +20,14 @@ public:
     }
 
 
-    bool isMsgAvailable();
+   /* bool isMsgAvailable();
     Msg* receiveMsg();
 
     bool isMsgAvailable(Pattern& pattern);
     Msg* receiveMsg(Pattern& pattern);
     
     void sendMsg(const Msg& msg);
-    void sendMsg(const String& msg);
+    void sendMsg(const String& msg);*/
 
 private:
     BevandaImpl* Chocolate;
