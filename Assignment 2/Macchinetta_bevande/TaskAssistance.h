@@ -16,7 +16,6 @@ private:
 TaskAssistance::TaskAssistance(String type){
     //Refill - Complete
     this->assistanceType += type;
-    MsgService.sendMsg( String(this->chocolate->getBeverage() + "-" + this->tea->getBeverage() + "-" + this->coffee->getBeverage() + "-0-"+assistanceType) );
 }
 
 void TaskAssistance::init(int period){

@@ -6,7 +6,7 @@
 class Sonar {
 
 public:
-  virtual float signal() = 0;
+  virtual void signal() = 0;
   virtual double getDistance() = 0;
 };
 

@@ -1,6 +1,7 @@
 #ifndef __TASK_MAKE__
 #define __TASK_MAKE__
 
+#include <string.h>
 #include "Arduino.h"
 #include "bevandaImpl.h"
 #include "Task.h"
@@ -25,7 +26,7 @@ private:
   BevandaImpl* Coffee;
   bool Assistance;
   lcd_l2c* l2c;
-  enum{WELCOME, READY, WAIT, MAKE, ASSISTANCE} state;
+  enum{WELCOME, READY, WAIT, MAKE, ASSISTANCE_REFILL, ASSISTANCE_REPAIR} state;
   enum{CHOCOLATE, TEA, COFFEE, nope} beverages;
 };
 
@@ -48,6 +49,7 @@ void TaskMake::init(int period){
 }
 
 void TaskMake::tick(){
+  String message ="25-30-10-0-"; //std::to_string(this->Chocolate->getBeverage()) + '-' + std::to_string(this->Tea->getBeverage()) + '-' + std::to_string(this->Coffee->getBeverage()) + "-0-";
   switch (state)
   {
     case MAKE:
@@ -57,26 +59,23 @@ void TaskMake::tick(){
       {
         case CHOCOLATE:
           if(this->Chocolate->getBeverage() >= 0){
-            this->Chocolate->makeBeverage();                                                                                                 //0 = self test eseguiti
-            MsgService.sendMsg( String(this->chocolate->getBeverage() + "-" + this->tea->getBeverage() + "-" + this->coffee->getBeverage() + "-0-Making") );
+            this->Chocolate->makeBeverage();
           } else {
-            this->state = ASSISTANCE;
+            this->state = ASSISTANCE_REFILL;
           }
           break;
         case TEA:
           if(this->Tea->getBeverage() >= 0){
             this->Tea->makeBeverage();
-            MsgService.sendMsg( String(this->chocolate->getBeverage() + "-" + this->tea->getBeverage() + "-" + this->coffee->getBeverage() + "-0-Making") );
           } else {
-            this->state = ASSISTANCE;
+            this->state = ASSISTANCE_REFILL;
           }
           break;
         case COFFEE:
           if(this->Coffee->getBeverage() >= 0){
             this->Coffee->makeBeverage();
-            MsgService.sendMsg( String(this->chocolate->getBeverage() + "-" + this->tea->getBeverage() + "-" + this->coffee->getBeverage() + "-0-Making") );
           } else {
-            this->state = ASSISTANCE;
+            this->state = ASSISTANCE_REFILL;
           }
           break;
         default:
@@ -87,7 +86,7 @@ void TaskMake::tick(){
     case WAIT:
       l2c->print("Scegli una bevanda...");
       //Selezione bevanda e passaggio a make
-      MsgService.sendMsg( String(this->chocolate->getBeverage() + "-" + this->tea->getBeverage() + "-" + this->coffee->getBeverage() + "-0-Wait") );
+      
       this->state = MAKE;
       break;
 
@@ -98,12 +97,12 @@ void TaskMake::tick(){
 
     case READY:
       l2c->print("Ready...");
-      MsgService.sendMsg( String(this->chocolate->getBeverage() + "-" + this->tea->getBeverage() + "-" + this->coffee->getBeverage() + "-0-Ready") );
       state = WAIT;
       break;
 
-    case ASSISTANCE:
+    case ASSISTANCE_REFILL:
       l2c->print("Assistance needed...");
+ 
       this->Assistance = true;
       break;
     
@@ -111,6 +110,7 @@ void TaskMake::tick(){
       state = READY;
       break;
   }
+  MsgService.sendMsg(message);
 }
 
 extern bool Assistance;

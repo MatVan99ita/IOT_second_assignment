@@ -2,12 +2,9 @@
 #define __SONAR__
 
 #include "sonar.h"
-#include <arduino.h>
+#include "Arduino.h"
 
-
-class SonarImpl: public Sonar {
-    const float vs = 331.45 + 0.62*20;
-    
+class SonarImpl{
 public:
     SonarImpl(int trigPin, int echoPin);
     double getDistance();
@@ -17,7 +14,6 @@ private:
     int trigPin;
     int echoPin;
     long tUS;
-    Sonar* sonar;
 };
 
 #endif

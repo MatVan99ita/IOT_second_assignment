@@ -12,6 +12,7 @@ float SonarImpl::signal(long signal){
 }
 
 double SonarImpl::getDistance(){
+    const float vs = 331.45 + 0.62*20;
     double t = this->tUS / 1000.0 / 1000.0 / 2;
     double d = t*vs;
     return d;
