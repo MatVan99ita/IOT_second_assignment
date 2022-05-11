@@ -30,8 +30,18 @@ private:
 };
 
 void TaskTest::makeTest(int servoPin, int lmPin){
-    this->servo->ServoMotorImpl(servoPin);
+    this->servo->on(int servoPin);
+    for(int i = 0; i < 180; i++){
+        this->servo->setPosition(i);
+    }
+    for(int i = 180; i > 0; i--){
+        this->servo->setPosition(i);
+    }
+    this->servo->off();
+
     this->lm35->LM35Impl(lmPin);
+
+
 }
 
 #endif

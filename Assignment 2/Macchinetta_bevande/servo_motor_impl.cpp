@@ -5,7 +5,7 @@ ServoMotorImpl::ServoMotorImpl(int pin){
   this->pin = pin;
 }
 
-void ServoMotorImpl::on(){
+void ServoMotorImpl::on(int pin){
   motor.attach(pin);
 }
 
