@@ -1,5 +1,5 @@
-#ifndef __SLEEPTIMER__
-#define __SLEEPTIMER__
+#ifndef __SLEEP_TIMER__
+#define __SLEEP_TIMER__
 
 #include "Timer.h"
 #include "Task.h"

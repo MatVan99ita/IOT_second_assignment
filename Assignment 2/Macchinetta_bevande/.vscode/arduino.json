@@ -1,5 +1,6 @@
 {
     "port": "COM3",
     "board": "arduino:avr:uno",
-    "sketch": "Macchinetta_bevande.ino"
+    "sketch": "Macchinetta_bevande.ino",
+    "programmer": "arduino:arduinoisp"
 }
