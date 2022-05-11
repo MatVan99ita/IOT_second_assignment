@@ -13,7 +13,7 @@
 /*Librerie per le componenti arduino*/
 #include "servo_motor_impl.h"
 //#include "lm35_impl.h"                                      ////////////////////////NON VA  NON VA  NON VA NON VA
-//#include "ComponentLib/ServoTimer2.h"                         ////////////////////////NON VA  NON VA  NON VA NON VA
+#include "ServoTimer2.h"                         ////////////////////////NON VA  NON VA  NON VA NON VA
 
 #include "bevandaImpl.h"
 
