@@ -82,6 +82,7 @@ void TaskMake::tick(){
     case WAIT:
       l2c->print("Attendo");
       //Selezione bevanda e passaggio a make
+      this->state = MAKE;
       break;
 
     case WELCOME:

@@ -7,6 +7,10 @@
 class SleepTimer: public Task{
 
     int time;
+public:
+    SleepTimer();
+    void init(int period);
+    void tick();
+private:
     
-
 }
