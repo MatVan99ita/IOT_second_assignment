@@ -4,6 +4,7 @@
 class Task {
   int myPeriod;
   int timeElapsed;
+  bool active;
   
 public:
   virtual void init(int period){
@@ -21,6 +22,14 @@ public:
     } else {
       return false; 
     }
+  }
+
+  bool isActive(){
+    return active;
+  }
+
+  void setActive(bool active){
+    this->active = active;
   }
   
 };

@@ -1,4 +1,5 @@
 {
     "port": "COM3",
-    "board": "arduino:avr:uno"
+    "board": "arduino:avr:uno",
+    "sketch": "Assignment 2\\Macchinetta_bevande\\Macchinetta_bevande.ino"
 }
