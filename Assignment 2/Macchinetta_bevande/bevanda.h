@@ -4,8 +4,8 @@
 class Bevanda {
 
     public:
-        virtual void makeBeverage(int beverage) = 0;
-        virtual int getBeverage(int beverage) = 0;
+        virtual void makeBeverage() = 0;
+        virtual int getBeverage() = 0;
         virtual void refillBeverage() = 0;
 };
 

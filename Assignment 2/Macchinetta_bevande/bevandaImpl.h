@@ -8,8 +8,8 @@ class BevandaImpl: public Bevanda {
 
 public:
   BevandaImpl();
-  void makeBeverage(int beverage);
-  int getBeverage(int beverage);
+  void makeBeverage();
+  int getBeverage();
   void setQuantity(int quantity);
   void refillBeverage();
 

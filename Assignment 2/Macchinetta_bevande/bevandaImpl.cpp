@@ -4,11 +4,11 @@ BevandaImpl::BevandaImpl(){
     this->beverage = BEVERAGE_QUANTITY_TEST;
 }
 
-void BevandaImpl::makeBeverage(int beverage){
+void BevandaImpl::makeBeverage(){
     this->beverage--;
 }
 
-int BevandaImpl::getBeverage(int beverage){
+int BevandaImpl::getBeverage(){
     return this->beverage;
 }
 

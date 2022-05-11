@@ -22,8 +22,9 @@ private:
   BevandaImpl* Chocolate;
   BevandaImpl* Tea;
   BevandaImpl* Coffee;
+  bool Assistance;
   lcd_l2c* l2c;
-  enum{WELCOME, READY, WAIT, MAKE} state;
+  enum{WELCOME, READY, WAIT, MAKE, ASSISTANCE} state;
   enum{CHOCOLATE, TEA, COFFEE, nope} beverages;
 };
 
@@ -35,13 +36,13 @@ TaskMake::TaskMake(int servoPin){
   this->Tea = new BevandaImpl();
   this->Coffee = new BevandaImpl();
   this->l2c = new lcd_l2c();
-  this->beverages = nope;
+  this->beverages = CHOCOLATE;
+  this->Assistance = false;
 }
 
 void TaskMake::init(int period){
   Task::init(period);
   this->state = this->state == WELCOME ? READY: WAIT;
-
 }
 
 void TaskMake::tick(){
@@ -53,13 +54,25 @@ void TaskMake::tick(){
       switch (beverages)
       {
         case CHOCOLATE:
-          this->Chocolate->makeBeverage();
+          if(this->Chocolate->getBeverage() >= 0){
+            this->Chocolate->makeBeverage();
+          } else {
+            this->state = ASSISTANCE;
+          }
           break;
         case TEA:
-          this->Tea->makeBeverage();
+          if(this->Tea->getBeverage() >= 0){
+            this->Tea->makeBeverage();
+          } else {
+            this->state = ASSISTANCE;
+          }
           break;
         case COFFEE:
-          this->Coffee->makeBeverage();
+          if(this->Coffee->getBeverage() >= 0){
+            this->Coffee->makeBeverage();
+          } else {
+            this->state = ASSISTANCE;
+          }
           break;
         default:
           break;
@@ -80,6 +93,11 @@ void TaskMake::tick(){
       l2c->print("PARAONTO");
       state = WAIT;
       break;
+
+    case ASSISTANCE:
+      l2c->print("OH NOE");
+      this->Assistance = true;
+      break;
     
     default:
       state = READY;
@@ -87,4 +105,5 @@ void TaskMake::tick(){
   }
 }
 
+extern bool Assistance;
 #endif
