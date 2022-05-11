@@ -4,29 +4,29 @@
 #include "ServoTimer2.h"
 #include "Task.h"
 
-class TaskServoRotate: public Task
+class ServoRotate:
 {
     int pin;
     ServoTimer2* servo;
 
 public:
-    TaskServoRotate(int pin);
+    ServoRotate(int pin);
     void init(int period);
     void tick();
 };
 
-TaskServoRotate::TaskServoRotate(int pin)
+ServoRotate::ServoRotate(int pin)
 {
     this->pin = pin;
 }
 
-void TaskServoRotate::init(int period){
+void ServoRotate::init(int period){
     Task::init(period);
     this->servo->attach(this->pin);
     //this->rotation_state = POS;
 }
 
-void TaskServoRotate::tick()
+void ServoRotate::tick()
 {
     for(int i = 0; i < 180; i++){
         this->servo->write(i);
