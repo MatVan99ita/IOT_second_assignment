@@ -3,51 +3,39 @@
 
 
 #include "Arduino.h"
-#include "ServoTimer2.h"
+#include "ServoRotate.h"
 #include "lm35_impl.h"
+#include "lcd_l2c.h"
+#include "Task.h"
 
-class TaskTest
+class TaskTest: public Task
 {
 public:
-    TaskTest(){
-        this->self_test = 0;
-    }
-
-    void setSelfTest(int test){
-        this->self_test = test;
-    }
-
-    int getSelfTest(){
-        return this->self_test;
-    }
-
-    void makeTest(int servoPin, int lmPin);
+    TaskTest();
+    //void makeTest(int servoPin, int lmPin);
+    void init(int period);
+    void tick();
 
 private:
     int self_test;
-    ServoTimer2* servo;
-    LM35* lm35;
+    ServoRotate* servo;
+    //LM35* lm35;
+    lcd_l2c* l2c;
 };
 
-void TaskTest::makeTest(int servoPin, int lmPin){
-    /*this->servo->on(int servoPin);
-    for(int i = 0; i < 180; i++){
-        this->servo->setPosition(i);
-    }
-    for(int i = 180; i > 0; i--){
-        this->servo->setPosition(i);
-    }
-    this->servo->off();
+TaskTest::TaskTest(){
+  this->self_test = 0;
+  this->l2c = new lcd_l2c();
+  this->servo = new ServoRotate(10);
+}
 
-    this->lm35->LM35Impl(lmPin);
-    if(this->lm35->checkTemp()){
-        //Va bene
-        
-    } else {
-        //Va in assistenza
-        
-    }//*/
+void TaskTest::init(int period){
+  Task::init(period);
+}
 
+void TaskTest::tick(){
+  this->l2c->print("ASSISTEMIAMO");
+  this->servo->rotate();
 }
 
 #endif
