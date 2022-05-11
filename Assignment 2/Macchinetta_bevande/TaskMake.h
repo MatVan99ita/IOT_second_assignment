@@ -85,14 +85,14 @@ void TaskMake::tick(){
       break;
 
     case WAIT:
-      l2c->print("Attendo");
+      l2c->print("Scegli una bevanda...");
       //Selezione bevanda e passaggio a make
       MsgService.sendMsg( String(this->chocolate->getBeverage() + "-" + this->tea->getBeverage() + "-" + this->coffee->getBeverage() + "-0-Wait") );
       this->state = MAKE;
       break;
 
     case WELCOME:
-      l2c->print("WILKOMMEN!!!");
+      l2c->print("Welcome...");
       state = READY;
       break;
 

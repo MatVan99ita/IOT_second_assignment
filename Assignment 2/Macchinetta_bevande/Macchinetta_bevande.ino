@@ -21,7 +21,7 @@ void setup(){
   t1->init(50000);
 
   Task* t2 = new TaskTest();
-  t2->init(18000);
+  t2->init(180000);
 
   Task* t3 = new SleepTimer();
   t3->init(60000);
