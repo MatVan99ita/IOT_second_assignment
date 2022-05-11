@@ -8,6 +8,7 @@
 #include "MsgService.h"
 #include "ServoRotate.h"
 #include "lcd_l2c.h"
+#include "MsgService.h"
 
 class TaskMake: public Task {
     
@@ -42,6 +43,7 @@ TaskMake::TaskMake(int servoPin){
 
 void TaskMake::init(int period){
   Task::init(period);
+  MsgService.init();
   this->state = this->state == WELCOME ? READY: WAIT;
 }
 
@@ -49,13 +51,14 @@ void TaskMake::tick(){
   switch (state)
   {
     case MAKE:
-      this->l2c->print("Banana");
+      this->l2c->print("Choose beverage");
       this->servo->rotate();
       switch (beverages)
       {
         case CHOCOLATE:
           if(this->Chocolate->getBeverage() >= 0){
-            this->Chocolate->makeBeverage();
+            this->Chocolate->makeBeverage();                                                                                                 //0 = self test eseguiti
+            MsgService.sendMsg( String(this->chocolate->getBeverage() + "-" + this->tea->getBeverage() + "-" + this->coffee->getBeverage() + "-0-Making") );
           } else {
             this->state = ASSISTANCE;
           }
@@ -63,6 +66,7 @@ void TaskMake::tick(){
         case TEA:
           if(this->Tea->getBeverage() >= 0){
             this->Tea->makeBeverage();
+            MsgService.sendMsg( String(this->chocolate->getBeverage() + "-" + this->tea->getBeverage() + "-" + this->coffee->getBeverage() + "-0-Making") );
           } else {
             this->state = ASSISTANCE;
           }
@@ -70,6 +74,7 @@ void TaskMake::tick(){
         case COFFEE:
           if(this->Coffee->getBeverage() >= 0){
             this->Coffee->makeBeverage();
+            MsgService.sendMsg( String(this->chocolate->getBeverage() + "-" + this->tea->getBeverage() + "-" + this->coffee->getBeverage() + "-0-Making") );
           } else {
             this->state = ASSISTANCE;
           }
@@ -82,6 +87,7 @@ void TaskMake::tick(){
     case WAIT:
       l2c->print("Attendo");
       //Selezione bevanda e passaggio a make
+      MsgService.sendMsg( String(this->chocolate->getBeverage() + "-" + this->tea->getBeverage() + "-" + this->coffee->getBeverage() + "-0-Wait") );
       this->state = MAKE;
       break;
 
@@ -91,12 +97,13 @@ void TaskMake::tick(){
       break;
 
     case READY:
-      l2c->print("PARAONTO");
+      l2c->print("Ready...");
+      MsgService.sendMsg( String(this->chocolate->getBeverage() + "-" + this->tea->getBeverage() + "-" + this->coffee->getBeverage() + "-0-Ready") );
       state = WAIT;
       break;
 
     case ASSISTANCE:
-      l2c->print("OH NOE");
+      l2c->print("Assistance needed...");
       this->Assistance = true;
       break;
     

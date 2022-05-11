@@ -5,6 +5,7 @@
 #include "Task.h"
 #include "LightSensorImpl.h"
 #include "sonarImpl.h"
+#include "lcd_l2c.h"
 
 class SleepTimer: public Task{
 
@@ -20,4 +21,5 @@ private:
     int lightIntensity;
     bool movement;
     double distance;
+    lcd_l2c* l2c;
 };
