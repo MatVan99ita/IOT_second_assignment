@@ -1,7 +1,7 @@
 #include "bevandaImpl.h"
 
 BevandaImpl::BevandaImpl(){
-    this->beverage = 100;
+    this->beverage = BEVERAGE_QUANTITY_TEST;
 }
 
 void BevandaImpl::makeBeverage(int beverage){

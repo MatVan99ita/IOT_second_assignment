@@ -6,9 +6,8 @@
 #include "Task.h"
 #include "TaskTest.h"
 #include "MsgService.h"
-#include "ServoTimer2.h"
-
-#define BEVERAGE_QUANTITY_TEST 1
+#include "ServoRotate.h"
+#include "lcd_l2c.h"
 
 class TaskMake: public Task {
     
@@ -18,38 +17,36 @@ public:
   void tick();
 
 private:
-  ServoTimer2* servo;
+  ServoRotate* servo;
   int servoPin;
+  BevandaImpl* Chocolate;
+  BevandaImpl* Tea;
+  BevandaImpl* Coffee;
+  lcd_l2c* l2c;
   enum{WELCOME, READY, WAIT, MAKE} state;
-    /*BevandaImpl* Chocolate;
-    BevandaImpl* Tea;
-    BevandaImpl* Coffee;
-    String status;
-    int PrimoAvvio = 0;
-    TaskTest* test;*/
 };
 
 TaskMake::TaskMake(int servoPin){
   this->servoPin = servoPin;
+  this->servo = new ServoRotate(this->servoPin);
+  this->state = WELCOME;
+  this->Chocolate = new BevandaImpl();
+  this->Tea = new BevandaImpl();
+  this->Coffee = new BevandaImpl();
+  this->l2c = new lcd_l2c();
 }
 
 void TaskMake::init(int period){
   Task::init(period);
-  this->servo = new ServoTimer2();
-  this->servo->attach(this->servoPin);
+  this->state = this->state == WELCOME ? READY: WAIT;
+
 }
 
 void TaskMake::tick(){
-  
-  int val = this->servo->read();
-  this->servo->write(val+5);
-  int val2 = this->servo->read();
-  /*for(int i = 0; i < 180; i++){
-    this->servo->write(i);
+  if(this->state == MAKE){
+    this->l2c->print("Banana");
+    this->servo->rotate();
   }
-  for(int i = 180; i > 0; i--){
-    this->servo->write(i);
-   }*/
 }
 
 #endif
