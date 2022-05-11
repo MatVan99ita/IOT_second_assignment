@@ -4,6 +4,7 @@
 #include "sonar.h"
 #include <arduino.h>
 
+
 class SonarImpl: public Sonar {
     const float vs = 331.45 + 0.62*20;
     
