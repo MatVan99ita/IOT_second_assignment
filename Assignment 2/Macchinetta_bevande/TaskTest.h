@@ -3,7 +3,7 @@
 
 
 #include "Arduino.h"
-#include "servo_motor_impl.h"
+#include "ServoTimer2.h"
 #include "lm35_impl.h"
 
 class TaskTest
@@ -25,12 +25,12 @@ public:
 
 private:
     int self_test;
-    ServoMotorImpl* servo;
+    ServoTimer2* servo;
     LM35* lm35;
 };
 
 void TaskTest::makeTest(int servoPin, int lmPin){
-    this->servo->on(int servoPin);
+    /*this->servo->on(int servoPin);
     for(int i = 0; i < 180; i++){
         this->servo->setPosition(i);
     }
@@ -40,13 +40,13 @@ void TaskTest::makeTest(int servoPin, int lmPin){
     this->servo->off();
 
     this->lm35->LM35Impl(lmPin);
-    if(this->lm35->checkTemp){
+    if(this->lm35->checkTemp()){
         //Va bene
         
     } else {
         //Va in assistenza
         
-    }
+    }//*/
 
 }
 

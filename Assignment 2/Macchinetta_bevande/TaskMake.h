@@ -4,6 +4,7 @@
 #include "Arduino.h"
 #include "bevandaImpl.h"
 #include "TaskTest.h"
+#include "MsgService.h"
 
 #define BEVERAGE_QUANTITY_TEST 1
 
@@ -13,7 +14,7 @@ public:
 
     void init(){
         this->status = "Welcome";
-        this->Chocolate =->setQuantity(BEVERAGE_QUANTITY_TEST);
+        this->Chocolate->setQuantity(BEVERAGE_QUANTITY_TEST);
         this->Tea->setQuantity(BEVERAGE_QUANTITY_TEST);
         this->Coffee->setQuantity(BEVERAGE_QUANTITY_TEST);
         this->test->setSelfTest(0);
