@@ -24,6 +24,7 @@ private:
   BevandaImpl* Coffee;
   lcd_l2c* l2c;
   enum{WELCOME, READY, WAIT, MAKE} state;
+  enum{CHOCOLATE, TEA, COFFEE, nope} beverages;
 };
 
 TaskMake::TaskMake(int servoPin){
@@ -34,6 +35,7 @@ TaskMake::TaskMake(int servoPin){
   this->Tea = new BevandaImpl();
   this->Coffee = new BevandaImpl();
   this->l2c = new lcd_l2c();
+  this->beverages = nope;
 }
 
 void TaskMake::init(int period){
@@ -43,9 +45,45 @@ void TaskMake::init(int period){
 }
 
 void TaskMake::tick(){
-  if(this->state == MAKE){
-    this->l2c->print("Banana");
-    this->servo->rotate();
+  switch (state)
+  {
+    case MAKE:
+      this->l2c->print("Banana");
+      this->servo->rotate();
+      switch (beverages)
+      {
+        case CHOCOLATE:
+          this->Chocolate->makeBeverage();
+          break;
+        case TEA:
+          this->Tea->makeBeverage();
+          break;
+        case COFFEE:
+          this->Coffee->makeBeverage();
+          break;
+        default:
+          break;
+      }
+      break;
+
+    case WAIT:
+      l2c->print("Attendo");
+      //Selezione bevanda e passaggio a make
+      break;
+
+    case WELCOME:
+      l2c->print("WILKOMMEN!!!");
+      state = READY;
+      break;
+
+    case READY:
+      l2c->print("PARAONTO");
+      state = WAIT;
+      break;
+    
+    default:
+      state = READY;
+      break;
   }
 }
 

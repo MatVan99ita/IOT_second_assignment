@@ -3,7 +3,7 @@
 #include "Task.h"
 #include "bevandaImpl.h"
 #include "TaskMake.h"
-#include "TaskAssistance.h"
+//#include "TaskAssistance.h"
 //#include "ServoRotate.h"
 #include "TaskTest.h"
 #include "Scheduler.h"
@@ -15,7 +15,8 @@ void setup(){
   Serial.begin(9600);
   scheduler->init(100);
   Task* t0 = new TaskMake(servoPin);
-  t0 -> init(100);
+  t0 -> init(500);
+  Task* t1 = new TaskAssistance();
   scheduler->addTask(t0);
 }
 
