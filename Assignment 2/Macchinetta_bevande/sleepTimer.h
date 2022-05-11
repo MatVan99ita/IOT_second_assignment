@@ -11,5 +11,5 @@ public:
     void init(int period);
     void tick();
 private:
-    int time
+    int time;
 };
