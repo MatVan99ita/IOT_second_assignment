@@ -3,7 +3,7 @@
 
 
 #include "Arduino.h"
-#include "ServoTimer2.h"
+#include "servo_motor_impl.h"
 #include "lm35_impl.h"
 
 class TaskTest
@@ -21,15 +21,17 @@ public:
         return this->self_test;
     }
 
-    void makeTest()
+    void makeTest(int servoPin, int lmPin);
 
 private:
     int self_test;
-    ServoTimer2* servo;
+    ServoMotorImpl* servo;
     LM35* lm35;
 };
 
-void TaskTest::makeTest(){
+void TaskTest::makeTest(int servoPin, int lmPin){
+    this->servo->ServoMotorImpl(servoPin);
+    this->lm35->LM35Impl(lmPin);
 }
 
 #endif
