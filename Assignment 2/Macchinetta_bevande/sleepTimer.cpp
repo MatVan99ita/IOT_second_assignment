@@ -9,5 +9,4 @@ void SleepTimer::init(int period){
 }
 
 void SleepTimer::tick(){
-
 }

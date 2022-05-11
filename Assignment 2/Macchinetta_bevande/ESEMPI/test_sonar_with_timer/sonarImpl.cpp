@@ -5,12 +5,15 @@ SonarImpl::SonarImpl(int trigPin, int echoPin){
     this->trigPin = trigPin;
     this->echoPin = echoPin;
     this->tUS = 0.0;
+    this->sonar
 }
 
-SonarImpl::signal(){
-
+float SonarImpl::signal(long signal){
+    this->tUS = signal;
 }
 
-SonarImpl::getDistance(){
-    
+double SonarImpl::getDistance(){
+    double t = this->tUS / 1000.0 / 1000.0 / 2;
+    double d = t*vs;
+    return d;
 }
